@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>field. · UNIQLO and TEENAGE ENGINEERING</title>
+<link rel="icon" type="image/png" sizes="32x32" href="img/marques/uniqlo-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="img/marques/uniqlo-64.png">
+<link rel="apple-touch-icon" href="img/marques/uniqlo-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --encre:#0F0E12;--fond:#F5F5F5;--papier:#E7E6E3;--blanc:#FFFFFF;--ligne:#E1E1DE;--label:#9C9C9A;--accent:#0071BB;--orange:#FF5000;--rouge:#FF0000;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;--sans:Inter,Helvetica,Arial,sans-serif;
+  --marge:clamp(16px,4.2vw,64px);--gout:clamp(8px,1vw,14px);
+  --meca:cubic-bezier(.2,.7,.1,1);
+}
+html{background:var(--fond);color:var(--encre);font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{overflow-x:clip}
+img,video,canvas{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.lab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--label)}
+.cache{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* barre */
+.barre{position:fixed;inset:0 0 auto;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:16px var(--marge);color:var(--fond);mix-blend-mode:difference}
+/* le logo UNIQLO garde son rouge : il vit hors de la barre en mode différence */
+.logo-uq{position:fixed;top:14px;left:var(--marge);z-index:41;display:block;line-height:0}
+.logo-uq svg{height:32px;width:auto}
+.marque{display:flex;align-items:center;gap:12px;text-decoration:none}
+.place-uq{width:72px;height:32px}
+.marque .et{font-family:var(--mono);font-size:10px;letter-spacing:.14em;opacity:.75}
+.te-marque{display:flex;align-items:center;gap:9px;font-weight:300;font-size:13px;line-height:1;letter-spacing:-.01em}
+/* pictogramme officiel noir, passé en blanc : la barre en mode différence l'inverse selon le fond */
+.te-marque img{height:26px;width:auto;filter:invert(1)}
+.barre nav{display:flex;gap:26px}
+.barre nav a{text-decoration:none}
+.bouton-panier{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.bouton-panier b{font-weight:400;display:inline-block;min-width:1.4em;text-align:right}
+.bouton-panier.bond b{animation:bond .5s var(--meca)}
+@keyframes bond{30%{transform:translateY(-6px)}}
+
+/* hero lumière */
+.hero{position:relative;min-height:100svh;background:#050507;color:var(--fond);overflow:hidden;display:flex;align-items:flex-end}
+.hero canvas,.hero .secours{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .secours{display:none}
+.hero.sans-gpu .secours{display:block}
+.hero-texte{position:relative;z-index:2;padding:0 var(--marge) clamp(40px,7vh,88px);pointer-events:none;width:100%}
+.hero-texte .lab{color:rgba(245,245,245,.55)}
+.titre{font-size:clamp(88px,17vw,280px);font-weight:200;line-height:.82;letter-spacing:-.055em;margin:18px 0 26px;display:flex}
+.titre span{display:inline-block;transform:translateY(105%);animation:monte 1.1s var(--meca) forwards;animation-delay:calc(var(--i) * 70ms + .15s)}
+.titre-cadre{overflow:hidden;padding-bottom:.06em}
+.titre .pt{color:var(--accent)}
+@keyframes monte{to{transform:none}}
+.hero-bas{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.accroche{font-size:clamp(15px,1.25vw,18px);line-height:1.5;max-width:380px;color:rgba(245,245,245,.78)}
+.actions{display:flex;gap:10px;pointer-events:auto;flex-wrap:wrap}
+.pilule{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 24px;border-radius:999px;background:var(--fond);color:var(--encre);
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:background .24s var(--meca),color .24s var(--meca)}
+.pilule:hover{background:var(--orange);color:#fff}
+.pilule.creuse{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px currentColor}
+.pilule.creuse:hover{background:var(--fond);color:var(--encre);box-shadow:none}
+.pilule.encre{background:var(--encre);color:var(--fond)}
+.pilule.encre:hover{background:var(--orange)}
+.indice{position:absolute;z-index:2;top:50%;right:var(--marge);writing-mode:vertical-rl;color:rgba(245,245,245,.4)}
+/* ouverture : la vidéo se joue seule, puis l'effet s'allume par-dessus sa dernière image */
+.hero .ouverture,.hero .fin-ouverture{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.hero.intro .ouverture,.hero.intro-finie .ouverture,.hero.intro .fin-ouverture,.hero.intro-finie .fin-ouverture{display:block}
+/* la dernière image, fixe : c'est sur elle que l'effet se cale, quoi que la vidéo affiche en s'arrêtant */
+.hero .fin-ouverture{opacity:0;transition:opacity .5s var(--meca)}
+.hero.intro-finie .fin-ouverture{opacity:1}
+.hero canvas{transition:opacity 1.4s var(--meca)}
+.hero.intro canvas{opacity:0}
+.hero.intro-finie canvas{mix-blend-mode:screen}
+.hero.intro .hero-texte,.hero.intro .indice{opacity:0}
+.hero.intro .titre span{animation-play-state:paused}
+.hero-texte,.indice{transition:opacity .8s var(--meca)}
+.passer{position:absolute;z-index:3;right:var(--marge);bottom:24px;color:rgba(245,245,245,.6);padding:10px 0}
+.passer:hover{color:#fff}
+
+/* bande défilante */
+.bande{overflow:hidden;border-block:1px solid var(--ligne);background:var(--fond);padding:14px 0}
+.bande div{display:flex;gap:48px;width:max-content;animation:defile 38s linear infinite}
+.bande span{white-space:nowrap}
+.bande i{color:var(--accent);font-style:normal}
+@keyframes defile{to{transform:translateX(-50%)}}
+
+/* scène continue : « de l'extérieur » puis le récit, sur le même fond.
+   Le sweat, calé à gauche, reste épinglé pendant les deux sections et s'efface vers la droite, là où vit le texte.
+   --q (0 → 1) le recule à peine pendant que le récit arrive : une variation de profondeur, pas un changement de scène.
+   La vidéo est floutée et cadrée à l'avance (sweat-fantome-flou.mp4) : aucun filtre à calculer à chaque image. */
+.continu{position:relative;--q:0}
+.continu-fond{position:absolute;inset:0;pointer-events:none}
+.continu-cadre{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--fond)}
+.continu-cadre video{position:absolute;left:-3%;top:0;height:100%;width:min(100svh,64vw);object-fit:cover;object-position:30% 50%;
+  -webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);
+  transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%;will-change:transform}
+.continu-voile{position:absolute;inset:0;background:var(--fond);opacity:calc(var(--q) * .18)}
+.flou{position:relative;min-height:170svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;gap:0 clamp(24px,4vw,64px);padding:30svh var(--marge) 34svh}
+.flou .bloc-lignes{grid-column:2;align-self:start}
+.flou .bloc-lignes + .bloc-lignes{align-self:end}
+.bloc-lignes{font-size:clamp(34px,4.6vw,76px);font-weight:200;letter-spacing:-.035em;line-height:1}
+.ligne{display:block;overflow:hidden;padding-bottom:.08em}
+.ligne span{display:block;transform:translateY(105%);transition:transform 1s var(--meca);transition-delay:calc(var(--i) * 90ms)}
+.vue .ligne span{transform:none}
+.bloc-lignes em{font-style:normal;color:var(--accent)}
+.flou .lab{position:absolute;left:calc(50% + clamp(12px,2vw,32px));bottom:26svh;color:rgba(15,14,18,.55)}
+
+/* récit au scroll : tout est piloté par --p (0 → 1) et, par étape, --d (-1 → 0 → 1) */
+.recit{height:230vh;position:relative;--p:0}
+.recit-fixe{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(24px,4vw,64px);padding:84px var(--marge) 40px}
+.recit-numero{position:absolute;right:calc(var(--marge) - .06em);bottom:-.18em;font-family:var(--mono);font-size:clamp(160px,26vw,420px);line-height:1;letter-spacing:-.06em;
+  color:transparent;-webkit-text-stroke:1px var(--ligne);pointer-events:none;display:flex;overflow:hidden;height:1em}
+.recit-numero span{display:block;transform:translateY(calc(var(--n, 0) * -1em));transition:transform .7s var(--meca)}
+.recit-numero span i{display:block;font-style:normal;height:1em;line-height:1}
+.etapes{position:relative;grid-column:2;display:grid;align-items:center;min-height:52svh}
+.etape{grid-area:1 / 1;--d:1;pointer-events:none}
+.etape.active{pointer-events:auto}
+.etape .lab{display:block;color:var(--accent);opacity:calc(1 - abs(var(--d)) * 2.2);transform:translateX(calc(var(--d) * -40px))}
+.etape h2{font-size:clamp(40px,5.6vw,96px);font-weight:200;letter-spacing:-.045em;line-height:.94;margin:14px 0 18px}
+.etape h2 .mot{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-right:.22em}
+.etape h2 .mot span{display:inline-block;transform:translateY(calc(var(--d) * (-115% - var(--j) * 38%))) rotate(calc(var(--d) * -6deg));will-change:transform}
+.etape h2 em{font-style:normal;color:var(--accent)}
+.etape p{font-size:16px;line-height:1.55;color:#4A4A4E;max-width:420px;opacity:calc(1 - abs(var(--d)) * 2.6);transform:translateY(calc(var(--d) * -30px))}
+.jauge{position:absolute;left:var(--marge);right:var(--marge);bottom:28px;height:2px;background:var(--ligne)}
+.jauge i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(var(--p));background:var(--accent)}
+.jauge b{position:absolute;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--fond);box-shadow:inset 0 0 0 2px var(--accent);transform:translateX(-50%);transition:background .3s var(--meca)}
+.jauge b.passe{background:var(--accent)}
+
+/* macro : la trame vgpu en direct */
+.macro{position:relative;height:78svh;min-height:440px;overflow:hidden;display:grid;place-items:center;background:var(--accent);color:#fff;text-align:center;cursor:crosshair}
+.macro canvas,.macro video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.macro video{display:none}
+.macro.sans-gpu video{display:block}
+/* le texte est centré dans une fenêtre que la trame lui ouvre (voir trame.ts) */
+.macro .bloc-lignes{position:relative;display:flex;flex-direction:column;align-items:center;max-width:calc(100% - 2 * var(--marge));
+  font-size:clamp(40px,6.4vw,112px);line-height:.98;pointer-events:none}
+.macro .bloc-lignes em{display:flex;align-items:center;gap:12px;margin-bottom:clamp(18px,2.2vw,30px);color:#fff;
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+/* le motif 3 × 3 de la collection, en petit */
+.macro .bloc-lignes em::before{content:"";width:14px;height:14px;background:radial-gradient(circle,#fff 1.5px,transparent 2px) -1.2px -1.2px / 5.6px 5.6px}
+.macro .bloc-lignes small{margin-top:clamp(18px,2.2vw,30px);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.macro .lab{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;background:var(--accent);padding:4px 8px;pointer-events:none}
+
+/* tirette : une photo, pleine hauteur ; le texte réduit à l'essentiel */
+.tirette{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100svh;background:var(--fond)}
+.tirette-media{position:relative;overflow:hidden;background:var(--papier)}
+.tirette-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.tirette-texte{align-self:end;padding:0 var(--marge) clamp(48px,9vh,110px);display:flex;flex-direction:column;gap:22px}
+.tirette h2{font-size:clamp(48px,6.4vw,112px);font-weight:200;letter-spacing:-.05em;line-height:.9}
+.tirette h2 .pt{color:var(--accent)}
+.tirette p{font-size:16px;line-height:1.55;color:#4A4A4E;max-width:380px}
+.tirette-specs{border-top:1px solid var(--ligne);max-width:380px}
+.tirette-specs div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--ligne);font-family:var(--mono);font-size:11px}
+.tirette-specs dt{color:var(--label);letter-spacing:.1em;text-transform:uppercase}
+
+/* collection */
+.collection{padding:clamp(56px,9vw,120px) var(--marge) clamp(56px,8vw,110px)}
+/* trois pièces spéciales, en vedette en tête de la collection */
+.vedette-tete{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px clamp(20px,4vw,56px);align-items:baseline;
+  padding-bottom:14px;margin-bottom:var(--gout);border-bottom:1px solid var(--ligne)}
+.vedette-tete .lab{color:var(--orange)}
+.vedette-tete p{font-size:14px;line-height:1.55;color:#3A3A3E;max-width:62ch}
+.vedette-tete.seconde{margin-top:clamp(40px,5vw,72px)}
+.grille-hors{display:grid;gap:var(--gout);grid-template-columns:repeat(3,minmax(0,1fr))}
+.hors-carte{display:flex;flex-direction:column;cursor:pointer;text-align:left;min-width:0}
+.hors-carte .carte-media{aspect-ratio:1}
+.hors-carte .carte-media img{transition:opacity .5s var(--meca),transform .9s var(--meca)}
+.hors-carte .dapres{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--label);margin-top:10px}
+.hors-carte .dapres b{font-weight:400;color:var(--accent)}
+@media (max-width:1099px){
+  .vedette-tete{grid-template-columns:1fr}
+  .grille-hors{grid-template-columns:1fr}
+}
+.entete{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;margin-bottom:clamp(24px,3vw,40px)}
+.entete h2{font-size:clamp(52px,8vw,128px);font-weight:200;letter-spacing:-.05em;line-height:.86}
+.entete-droite{display:flex;align-items:flex-end;gap:20px}
+.chute{width:clamp(140px,16vw,240px);aspect-ratio:1;background:var(--papier);overflow:hidden}
+.chute video{width:100%;height:100%;object-fit:cover}
+.compte{text-align:right;line-height:1.8}
+
+.grille{display:grid;gap:var(--gout);grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-areas:"a a" "b b" "c c" "d d" "e e" "f i" "g h"}
+@media (min-width:520px){.grille{grid-template-areas:"a a" "b c" "d e" "f i" "g h"}}
+@media (min-width:1100px){.grille{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"a a b c" "a a d e" "f i g h"}}
+@media (min-width:1600px){.grille{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-areas:"a a b c d e" "a a f i g h"}}
+
+.carte{position:relative;display:flex;flex-direction:column;cursor:pointer;text-align:left;min-width:0}
+.carte-media{position:relative;flex:1;min-height:0;aspect-ratio:1;overflow:hidden;background:var(--papier)}
+/* sur grand écran, la pièce phare couvre deux rangées : son image remplit toute la hauteur */
+@media (min-width:1100px){.carte.phare .carte-media{aspect-ratio:auto}}
+.carte-media img,.carte-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s var(--meca),transform .9s var(--meca)}
+.carte .alt{opacity:0}
+.carte video{opacity:0}
+.carte .alt.porte{object-position:50% 22%}
+@media (hover:hover){
+  .carte:hover .carte-media img{transform:scale(1.035)}
+  .carte:hover .alt{opacity:1}
+  .carte:hover video{opacity:1}
+}
+.legende{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 2px 4px;align-items:start}
+.legende .code{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--accent)}
+.legende .nom{font-size:15px;grid-column:1}
+.legende .prix{font-family:var(--mono);font-size:11px;color:var(--label);grid-column:1}
+.teintes{display:flex;gap:5px;grid-column:1;margin-top:6px}
+.teintes i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.plus{grid-column:2;grid-row:1 / span 3;align-self:center;width:38px;height:38px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--encre);
+  display:grid;place-items:center;font-size:18px;line-height:1;transition:background .2s var(--meca),color .2s var(--meca),box-shadow .2s var(--meca)}
+.plus:hover{background:var(--orange);color:#fff;box-shadow:none}
+.carte.ajoute .plus{background:var(--encre);color:var(--fond)}
+
+/* curseur : le motif 3 × 3 en réduction, centré exactement sur la pointe.
+   lien : la grille s'ouvre. action : un cadre de visée apparaît. média d'une pièce : « voir » s'inscrit à côté. */
+html.curseur-actif,html.curseur-actif *{cursor:none!important}
+.curseur{position:fixed;left:0;top:0;z-index:90;pointer-events:none;color:var(--encre);opacity:0;transition:opacity .2s var(--meca),color .2s var(--meca)}
+.curseur.visible{opacity:1}
+.curseur.clair{color:var(--fond)}
+.curseur-points{position:absolute;display:grid;grid-template-columns:repeat(3,2px);gap:2px;transform:translate(-50%,-50%);transition:gap .22s var(--meca),transform .15s var(--meca)}
+.curseur-points i{width:2px;height:2px;border-radius:50%;background:currentColor}
+.curseur-cadre{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform .22s var(--meca),opacity .18s var(--meca);
+  --c:linear-gradient(currentColor,currentColor);
+  background:var(--c) 0 0 / 7px 1px,var(--c) 0 0 / 1px 7px,var(--c) 100% 0 / 7px 1px,var(--c) 100% 0 / 1px 7px,
+    var(--c) 0 100% / 7px 1px,var(--c) 0 100% / 1px 7px,var(--c) 100% 100% / 7px 1px,var(--c) 100% 100% / 1px 7px;background-repeat:no-repeat}
+.curseur-label{position:absolute;left:24px;top:-6px;white-space:nowrap;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;transform:translateX(-4px);transition:opacity .18s var(--meca),transform .18s var(--meca)}
+.curseur.lien .curseur-points{gap:4px}
+.curseur.action .curseur-points,.curseur.voir .curseur-points{gap:3px}
+.curseur.action .curseur-cadre,.curseur.voir .curseur-cadre{opacity:1;transform:translate(-50%,-50%)}
+.curseur.voir .curseur-label{opacity:1;transform:none}
+.curseur.appui .curseur-points{transform:translate(-50%,-50%) scale(.75)}
+
+/* lookbook : le défilement vertical fait glisser la piste à l'horizontale */
+.lookbook{position:relative;background:var(--fond);--p:0}
+.lookbook-fixe{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center}
+.lookbook-piste{flex:0 0 auto;display:flex;align-items:center;gap:clamp(20px,3vw,48px);height:100%;padding:0 var(--marge);will-change:transform}
+.lookbook-intro{flex:0 0 min(420px,80vw)}
+.lookbook-intro h2{font-size:clamp(72px,11vw,190px);font-weight:200;letter-spacing:-.055em;line-height:.84;margin:16px 0 22px}
+.lookbook-intro .pt{color:var(--accent)}
+.lookbook-intro p{font-size:16px;line-height:1.55;color:#4A4A4E;max-width:340px}
+.lookbook-indice{display:block;margin-top:26px;color:var(--accent)}
+.look{flex:0 0 auto;display:flex;flex-direction:column;gap:12px;margin:0}
+.look:nth-of-type(odd){align-self:flex-start;margin-top:12svh}
+.look:nth-of-type(even){align-self:flex-end;margin-bottom:12svh}
+.look-media{position:relative;height:60svh;aspect-ratio:4 / 5;overflow:hidden;background:var(--papier)}
+.look.large .look-media{height:50svh;aspect-ratio:3 / 2}
+.look.carre .look-media{height:44svh;aspect-ratio:1}
+.look img{width:100%;height:100%;object-fit:cover;transform:scale(1.1) translateX(calc(var(--decalage, 0) * 1%))}
+.look figcaption{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline}
+.look .code{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--accent)}
+.look .titre-look{font-size:15px}
+.look .pieces{grid-column:1 / -1;display:flex;gap:6px;flex-wrap:wrap}
+.look .pieces button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:6px 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ligne);
+  transition:background .2s var(--meca),color .2s var(--meca),box-shadow .2s var(--meca)}
+.look .pieces button:hover{background:var(--encre);color:var(--fond);box-shadow:none}
+.lookbook-jauge{position:absolute;left:var(--marge);right:var(--marge);bottom:28px;height:2px;background:var(--ligne)}
+.lookbook-jauge i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(var(--p));background:var(--accent)}
+/* sur petit écran, la piste se fait défiler au doigt */
+@media (max-width:899px){
+  .lookbook-fixe{position:relative;height:auto;padding:72px 0 64px}
+  .lookbook-piste{flex:1;height:auto;align-items:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .look,.look:nth-of-type(odd),.look:nth-of-type(even){align-self:auto;margin:0;scroll-snap-align:center}
+  .look-media{height:auto;width:74vw}
+  .look.large .look-media{width:86vw;height:auto}
+  .look.carre .look-media{width:74vw;height:auto}
+  .look img{transform:none}
+  .lookbook-jauge{display:none}
+}
+
+/* teenage engineering */
+.te{background:#000;color:var(--fond);padding:clamp(64px,9vw,140px) var(--marge) clamp(36px,4vw,56px)}
+.te .lab{color:rgba(245,245,245,.5)}
+.te-tete{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,5vw,90px);align-items:end;margin-bottom:clamp(40px,6vw,88px)}
+.te h2{font-size:clamp(56px,9.5vw,168px);font-weight:200;letter-spacing:-.055em;line-height:.84;margin-top:18px}
+.te-texte p{font-size:clamp(15px,1.2vw,18px);line-height:1.55;color:rgba(245,245,245,.72);max-width:520px}
+.te-texte p + p{margin-top:16px}
+.te-texte b{font-weight:400;color:#fff}
+.te-chiffres{display:flex;flex-wrap:wrap;gap:18px 40px;margin-top:30px}
+.te-chiffres dt{font-size:clamp(30px,2.8vw,44px);font-weight:200;letter-spacing:-.035em;line-height:1}
+.te-chiffres dd{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,245,.5);margin-top:8px}
+.te-rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gout)}
+.te-objet{display:flex;flex-direction:column;gap:14px;text-decoration:none}
+.te-objet figure{position:relative;aspect-ratio:1;overflow:hidden;background:#000}
+.te-objet img{width:100%;height:100%;object-fit:cover;filter:brightness(.82);transition:transform 1.1s var(--meca),filter .6s var(--meca)}
+.te-objet figure::after{content:"";position:absolute;top:14px;right:14px;width:10px;height:10px;border-radius:50%;background:var(--orange);transform:scale(0);transition:transform .35s var(--meca)}
+.te-objet .nom{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+.te-objet p{font-size:14px;line-height:1.5;color:rgba(245,245,245,.6)}
+@media (hover:hover){
+  .te-objet:hover img{transform:scale(1.07);filter:brightness(1.05)}
+  .te-objet:hover figure::after{transform:scale(1)}
+}
+.te-pied{display:flex;justify-content:space-between;align-items:center;gap:16px 24px;flex-wrap:wrap;margin-top:clamp(36px,5vw,64px);padding-top:20px;border-top:1px solid rgba(245,245,245,.14)}
+.te-pied .pilule{background:var(--fond);color:#000}
+.te-pied .pilule:hover{background:var(--orange);color:#fff}
+
+/* la sortie : inscription au drop et contact */
+.sortie{padding:clamp(56px,8vw,110px) var(--marge);border-top:1px solid var(--ligne)}
+.sortie-tete{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px clamp(24px,5vw,80px);align-items:end;margin-bottom:clamp(28px,4vw,52px)}
+.sortie-tete .lab{grid-column:1;align-self:start}
+.sortie-tete h2{grid-column:1;font-size:clamp(38px,5.4vw,78px);font-weight:200;letter-spacing:-.04em;line-height:.92}
+.sortie-tete p{grid-column:2;font-size:15px;line-height:1.6;color:#3A3A3E;max-width:54ch}
+.sortie-corps{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gout) clamp(24px,5vw,80px);align-items:start}
+.inscription{display:flex;flex-direction:column;gap:14px}
+.champ{display:flex;gap:var(--gout);flex-wrap:wrap}
+.champ input{flex:1;min-width:220px;height:46px;padding:0 16px;font:inherit;font-size:15px;color:var(--encre);
+  background:var(--blanc);border:0;box-shadow:inset 0 0 0 1px var(--ligne);border-radius:0}
+.champ input::placeholder{color:var(--label)}
+.champ input:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--orange)}
+.champ .pilule{flex:none}
+.note-champ{font-size:13px;line-height:1.5;color:var(--label)}
+.note-champ.ok{color:var(--encre);display:flex;align-items:center;gap:9px}
+.note-champ.ok::before{content:"";width:8px;height:8px;background:var(--orange);flex:none}
+.note-champ.erreur{color:var(--orange)}
+.contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ligne);box-shadow:0 0 0 1px var(--ligne)}
+.contact div{background:var(--fond);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.contact dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.contact dd{font-size:13px;line-height:1.45;color:var(--label)}
+.contact a{text-decoration:none;border-bottom:1px solid var(--ligne)}
+.contact a:hover{color:var(--orange);border-bottom-color:var(--orange)}
+@media (max-width:1099px){
+  .sortie-tete,.sortie-corps,.contact{grid-template-columns:1fr}
+  .sortie-tete p{grid-column:1;max-width:none}
+  .champ input{min-width:0;width:100%}
+  .champ .pilule{width:100%;justify-content:center}
+}
+
+/* fiche produit */
+.voile{position:fixed;inset:0;z-index:50;background:rgba(15,14,18,.4);opacity:0;pointer-events:none;transition:opacity .35s var(--meca)}
+.voile.on{opacity:1;pointer-events:auto}
+.fiche,.panier{position:fixed;top:0;right:0;bottom:0;z-index:60;background:var(--fond);transform:translateX(102%);transition:transform .55s var(--meca);
+  display:flex;flex-direction:column;outline:none}
+.fiche{width:min(1100px,100%)}
+.panier{width:min(460px,100%)}
+.fiche.on,.panier.on{transform:none}
+.tete-panneau{display:flex;justify-content:space-between;align-items:center;height:54px;padding:0 24px;border-bottom:1px solid var(--ligne);flex:none}
+.fermer{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.fiche-corps{flex:1;overflow:auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
+/* la galerie reste en place, seule la colonne de droite défile */
+.galerie{position:sticky;top:0;display:flex;flex-direction:column;gap:var(--gout);padding:var(--gout);height:calc(100svh - 54px)}
+.vue-principale{position:relative;flex:1;min-height:0;background:var(--papier);overflow:hidden}
+.vue-principale img,.vue-principale video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.vignettes{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gout)}
+.vignette{aspect-ratio:1;background:var(--papier);overflow:hidden;position:relative}
+.vignette img{width:100%;height:100%;object-fit:cover}
+.vignette img.portee{object-position:50% 12%}
+.vignette[aria-current=true]{outline:2px solid var(--orange);outline-offset:-2px}
+.vignette .lab{position:absolute;left:6px;bottom:6px;color:var(--encre);background:rgba(245,245,245,.85);padding:2px 5px}
+.infos-fiche{padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;gap:22px;padding-bottom:clamp(48px,6vw,88px)}
+.bande .orange{color:var(--orange)}
+#fiche-recit-texte p + p{margin-top:10px}
+#fiche-guide .note{font-size:12px;line-height:1.5;color:var(--label)}
+.assurances{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ligne);box-shadow:0 0 0 1px var(--ligne)}
+.assurances div{background:var(--fond);padding:12px 14px;display:flex;flex-direction:column;gap:5px}
+.assurances dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.assurances dd{font-size:12px;line-height:1.4;color:var(--label)}
+.bloc{border-top:1px solid var(--ligne);padding-top:22px;display:flex;flex-direction:column;gap:14px}
+.bloc > .lab{letter-spacing:.18em}
+.bloc h3{font-size:22px;font-weight:200;letter-spacing:-.02em;line-height:1.2}
+.etapes-fab{display:flex;flex-direction:column;gap:1px;background:var(--ligne);box-shadow:0 0 0 1px var(--ligne)}
+.etape-fab{background:var(--fond);display:grid;grid-template-columns:34px 1fr;gap:14px;padding:14px}
+.etape-fab .num{font-family:var(--mono);font-size:11px;color:var(--orange);padding-top:2px}
+.etape-fab h4{font-size:14px;font-weight:400}
+.etape-fab p{font-size:13px;line-height:1.5;margin-top:5px}
+.etape-fab img{grid-column:2;margin-top:10px;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--papier)}
+.mesures{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.mesures th,.mesures td{border-bottom:1px solid var(--ligne);padding:9px 0;text-align:right}
+.mesures th:first-child,.mesures td:first-child{text-align:left}
+.mesures th{color:var(--label);letter-spacing:.1em;text-transform:uppercase;font-weight:400}
+.dans-looks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gout)}
+.dans-looks button{aspect-ratio:3/4;background:var(--papier);overflow:hidden;position:relative}
+.dans-looks img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.dans-looks .lab{position:absolute;left:6px;bottom:6px;color:var(--encre);background:rgba(245,245,245,.85);padding:2px 5px}
+.infos-fiche h2{font-size:clamp(34px,3.4vw,52px);font-weight:200;letter-spacing:-.03em;line-height:1}
+.infos-fiche .prix-fiche{font-family:var(--mono);font-size:18px}
+.infos-fiche p{font-size:15px;line-height:1.55;color:#3A3A3E}
+.choix{display:flex;flex-direction:column;gap:10px}
+.crans{display:flex;gap:1px;background:var(--ligne);box-shadow:0 0 0 1px var(--ligne);width:max-content}
+.cran{width:46px;height:46px;padding:9px;background:var(--blanc)}
+.cran i{display:block;width:100%;height:100%}
+.cran[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--orange);position:relative}
+.tailles{display:flex;flex-wrap:wrap;gap:6px}
+.taille{min-width:52px;height:40px;padding:0 12px;box-shadow:inset 0 0 0 1px var(--ligne);font-family:var(--mono);font-size:12px;background:var(--blanc)}
+.taille[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--encre);background:var(--encre);color:var(--fond)}
+.specs{border-top:1px solid var(--ligne)}
+.specs div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--ligne);font-family:var(--mono);font-size:11px}
+.specs dt{color:var(--label);letter-spacing:.1em;text-transform:uppercase}
+
+/* panier */
+.lignes-panier{flex:1;overflow:auto;padding:8px 24px}
+.ligne-panier{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--ligne);align-items:center}
+.ligne-panier img{width:72px;height:72px;object-fit:cover;background:var(--papier)}
+.ligne-panier .nom{font-size:14px}
+.ligne-panier .lab{display:block;margin-top:4px}
+.qte{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;margin-top:8px}
+.qte button{width:24px;height:24px;box-shadow:inset 0 0 0 1px var(--ligne)}
+.vide{padding:48px 0;text-align:center;color:var(--label)}
+.pied-panier{padding:20px 24px;border-top:1px solid var(--ligne);display:grid;gap:14px}
+.total{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px}
+.pied-panier .pilule{justify-content:center}
+.toast{position:fixed;left:50%;bottom:24px;z-index:70;transform:translate(-50%,calc(100% + 40px));background:var(--encre);color:var(--fond);padding:12px 18px;border-radius:999px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;transition:transform .4s var(--meca)}
+.toast.on{transform:translate(-50%,0)}
+.toast::before{content:"";display:inline-block;width:7px;height:7px;background:var(--orange);margin-right:9px;vertical-align:1px}
+
+.pied{padding:28px var(--marge);border-top:1px solid var(--ligne);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.pied-marque{display:flex;align-items:center;gap:16px}
+.pied-marque img{width:56px;height:56px}
+
+@media (max-width:1099px){
+  .barre nav{display:none}
+  .recit-fixe{gap:18px}
+  .etapes{min-height:30svh}
+  .etape h2{font-size:clamp(34px,9vw,60px)}
+  .etape p{font-size:14px}
+  .fiche-corps{grid-template-columns:1fr}
+  .galerie{position:static;height:auto}
+  .vue-principale{flex:none;aspect-ratio:1}
+  .assurances{grid-template-columns:1fr}
+  .tirette{grid-template-columns:1fr;min-height:0}
+  .tirette-media{aspect-ratio:4 / 5}
+  .tirette-texte{padding-top:40px}
+  .indice{display:none}
+  .te-tete{grid-template-columns:1fr}
+  .te-rail{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(72vw,360px);overflow-x:auto;scroll-snap-type:x mandatory;
+    margin-inline:calc(var(--marge) * -1);padding-inline:var(--marge);scrollbar-width:none}
+  .te-objet{scroll-snap-align:start}
+}
+@media (max-aspect-ratio:1/1){
+  .continu-cadre video{left:0;width:100%;height:64svh;object-position:50% 30%;
+    -webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);transform-origin:50% 0}
+  .flou{grid-template-columns:1fr;min-height:150svh;padding:58svh var(--marge) 24svh;gap:14svh}
+  .flou .bloc-lignes{grid-column:1}
+  .flou .lab{left:var(--marge);bottom:16svh}
+  .recit-fixe{grid-template-columns:1fr;align-content:end;padding-bottom:72px}
+  .etapes{grid-column:1;min-height:34svh}
+}
+@media (max-width:640px){
+  .entete{grid-template-columns:1fr}
+  .entete-droite{justify-content:space-between}
+  .compte{text-align:left}
+  .legende .nom{font-size:14px}
+  .plus{width:34px;height:34px}
+}
+@media (prefers-reduced-motion:reduce){
+  .titre span,.ligne span{animation:none;transform:none;transition:none}
+  .bande div{animation:none}
+  .fiche,.panier,.voile{transition:none}
+  .curseur,.curseur *{transition:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<a class="logo-uq" href="#haut" aria-label="UNIQLO, retour en haut"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 40" aria-hidden="true"><path fill="red" d="M50 0h40v40H50zM0 0h40v40H0z"/><g fill="#fff"><path d="M79.48 5.47h2.53v12.64h-2.53zM63.47 13.9a4.21 4.21 0 0 1-8.42 0V5.47h2.53v8.43a1.68 1.68 0 1 0 3.36 0V5.47h2.53zm11.79 20.63h-8.42V21.89h2.53V32h5.89v2.53zm0-16.42h-2.53l-3.36-7.22v7.22h-2.53V5.47h2.53l3.36 7.22V5.47h2.53v12.64zm-16 3.78a4.21 4.21 0 0 0-4.21 4.22v4.21a4.21 4.21 0 0 0 4.21 4.21 4.34 4.34 0 0 0 .82-.07l.86 2.6h2.53l-1.25-3.75a4.2 4.2 0 0 0 1.25-3v-4.2a4.21 4.21 0 0 0-4.21-4.22m1.68 8.43a1.68 1.68 0 1 1-3.36 0v-4.21a1.68 1.68 0 1 1 3.36 0zm19.8-8.43a4.22 4.22 0 0 0-4.22 4.22v4.21a4.21 4.21 0 0 0 8.42 0v-4.21a4.21 4.21 0 0 0-4.21-4.22m1.68 8.43a1.68 1.68 0 0 1-3.37 0v-4.21a1.68 1.68 0 0 1 3.37 0zM22.74 15.16H34.1v2.52H22.74zM24 5.47h8.84V8H24zm-9.26 0H7.15V8h5.06v7.16H5.9v2.52h11.36v-2.52h-2.52V5.47zm8 16.84v12.22H34.1V22.31zM31.57 32h-6.31v-7.16h6.31zM7.15 22.31l-1.28 6.12h2.52l.76-3.59h5.07L12.73 32H5.14l-.51 2.53h10.11l2.52-12.22H7.15z"/></g></svg></a>
+
+<header class="barre">
+  <a class="marque" href="#haut" aria-label="UNIQLO and teenage engineering"><span class="place-uq"></span><span class="et">and</span><span class="te-marque"><img src="img/marques/te-256.png" alt=""><span>teenage<br>engineering</span></span></a>
+  <nav class="mono" aria-label="Principale">
+    <a href="#collection">collection</a><a href="#interieur">l'intérieur</a><a href="#recit">la doublure</a><a href="#lookbook">lookbook</a><a href="#te">teenage engineering</a><a href="#sortie">la sortie</a>
+  </nav>
+  <button class="bouton-panier" id="ouvrir-panier" aria-haspopup="dialog">panier <b id="compte-panier">0</b></button>
+</header>
+
+<main id="haut">
+  <section class="hero" id="hero" aria-label="field." data-sombre>
+    <video class="ouverture" id="ouverture" muted playsinline preload="none" aria-hidden="true"></video>
+    <img class="fin-ouverture" id="fin-ouverture" alt="" aria-hidden="true">
+    <canvas id="lumiere" aria-hidden="true"></canvas>
+    <button class="passer mono" id="passer" hidden>passer l'intro</button>
+    <video class="secours" src="../videos/lumiere.mp4" poster="img/affiche-lumiere.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+    <div class="hero-texte">
+      <span class="lab">UNIQLO and teenage engineering · automne / hiver 2027</span>
+      <h1 class="titre-cadre"><span class="titre" aria-label="field.">
+        <span style="--i:0">f</span><span style="--i:1">i</span><span style="--i:2">e</span><span style="--i:3">l</span><span style="--i:4">d</span><span class="pt" style="--i:5">.</span>
+      </span></h1>
+      <div class="hero-bas">
+        <p class="accroche">Neuf basiques pour la journée de fabrication. Sobres à l'extérieur. Ouvrez-les : la trame de points apparaît.</p>
+        <div class="actions">
+          <a class="pilule" href="#collection">Voir la collection</a>
+          <a class="pilule creuse" href="#interieur">L'intérieur</a>
+        </div>
+      </div>
+    </div>
+    <span class="indice lab">déplacez le curseur · la lumière suit</span>  </section>
+
+  <div class="bande mono" aria-hidden="true">
+    <div>
+      <span>9 pièces <i>●</i> 3 hors gamme <i>●</i> 9 coloris <i>●</i> une doublure <i>●</i> 9 points <i>●</i> sortie 09.10 <i class="orange">●</i> field. <i>●</i></span>
+      <span>9 pièces <i>●</i> 3 hors gamme <i>●</i> 9 coloris <i>●</i> une doublure <i>●</i> 9 points <i>●</i> sortie 09.10 <i class="orange">●</i> field. <i>●</i></span>
+    </div>
+  </div>
+
+  <!-- une seule scène : le sweat flou reste en fond pendant « de l'extérieur » puis pendant tout le récit -->
+  <div class="continu" id="continu">
+    <div class="continu-fond" aria-hidden="true">
+      <div class="continu-cadre">
+        <video id="flou-fond" muted playsinline preload="none" poster="img/affiche-fantome-flou.jpg" data-src="../videos/sweat-fantome-flou.mp4"></video>
+        <div class="continu-voile"></div>
+      </div>
+    </div>
+
+  <section class="flou" id="interieur" aria-label="L'intérieur">
+    <p class="bloc-lignes"><span class="ligne"><span style="--i:0">de l'extérieur,</span></span><span class="ligne"><span style="--i:1">un basique.</span></span></p>
+    <p class="bloc-lignes"><span class="ligne"><span style="--i:2">à l'intérieur,</span></span><span class="ligne"><span style="--i:3"><em>la trame.</em></span></span></p>
+    <span class="lab">FW-03 · sweat zippé à capuche · 39,90 €</span>
+  </section>
+
+  <section class="recit" id="recit" aria-label="La doublure">
+    <div class="recit-fixe">
+      <div class="recit-numero" aria-hidden="true"><span><i>01</i><i>02</i><i>03</i></span></div>
+      <div class="etapes">
+        <div class="etape">
+          <span class="lab">01 · fermé</span>
+          <h2>un basique, rien de plus</h2>
+          <p>Molleton gris chiné, coupe boxy, aucun cordon. De l'extérieur, un sweat que tout le monde porte.</p>
+        </div>
+        <div class="etape">
+          <span class="lab">02 · on l'ouvre</span>
+          <h2>la trame <em>apparaît</em></h2>
+          <p>À l'intérieur, une doublure bleue imprimée d'une grille régulière de points blancs. Le même motif sur les neuf pièces, en orange sur l'édition orange.</p>
+        </div>
+        <div class="etape">
+          <span class="lab">03 · ouvert</span>
+          <h2>ce qui est caché, <em>montré</em></h2>
+          <p>UNIQLO enfouit la composition dans un accordéon, Teenage Engineering noie ses cotes dans une page. field. sort au jour ce qui est à l'intérieur.</p>
+        </div>
+      </div>
+      <div class="jauge" aria-hidden="true"><i></i><b style="left:0"></b><b style="left:50%"></b><b style="left:100%"></b></div>
+    </div>
+  </section>
+  </div>
+
+  <section class="macro" id="macro" aria-label="La trame" data-sombre>
+    <canvas id="trame" aria-hidden="true"></canvas>
+    <video src="../videos/trame-hero.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+    <p class="bloc-lignes" id="macro-texte"><em>la doublure, de près</em><span class="ligne"><span style="--i:0">le même point,</span></span><span class="ligne"><span style="--i:1">sur les neuf pièces.</span></span><small>bleu 0071BB · points blancs · coton</small></p>
+    <span class="lab">passez le curseur sur la trame</span>
+  </section>
+
+  <section class="tirette" id="tirette" aria-labelledby="titre-tirette">
+    <figure class="tirette-media"><img src="img/detail-zip.jpg" alt="Le zip métal du sweat FW-03, les 9 points gravés sur la tirette" loading="lazy" decoding="async"></figure>
+    <div class="tirette-texte">
+      <span class="lab">FW-03 · fermeture</span>
+      <h2 id="titre-tirette">gravés,<br>pas imprimés<span class="pt">.</span></h2>
+      <p>Zip métal argenté, dents larges, tirette pleine. Les 9 points y sont gravés dans la masse : le motif fait partie de la pièce.</p>
+      <dl class="tirette-specs">
+        <div><dt>métal</dt><dd>argenté, brossé</dd></div>
+        <div><dt>motif</dt><dd>3 × 3, gravé</dd></div>
+        <div><dt>étiquette</dt><dd>blanche, cousue au col</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="collection" id="collection" aria-labelledby="titre-collection">
+    <div class="entete">
+      <h2 id="titre-collection">la<br>collection</h2>
+      <div class="entete-droite">
+        <p class="compte lab">9 pièces + 3 hors gamme<br>9 coloris<br>de 12,90 € à 149,90 €</p>
+        <figure class="chute"><video id="film-chute" src="../videos/chute-tshirt.mp4" muted playsinline preload="auto" aria-hidden="true"></video></figure>
+      </div>
+    </div>
+    <div class="vedette-tete">
+      <span class="lab">en vedette</span>
+      <p>Trois pièces dessinées d'après une machine de teenage engineering : elles en reprennent les couleurs, le lettrage et le nom, et les portent à l'extérieur.</p>
+    </div>
+    <div class="grille-hors" id="grille-hors"></div>
+    <div class="vedette-tete seconde"><span class="lab">les neuf basiques</span></div>
+    <div class="grille" id="grille"></div>
+  </section>
+
+  <section class="lookbook" id="lookbook" aria-labelledby="titre-lookbook">
+    <div class="lookbook-fixe">
+      <div class="lookbook-piste" id="piste">
+        <div class="lookbook-intro">
+          <span class="lab">lookbook · automne / hiver 2027</span>
+          <h2 id="titre-lookbook">portés<span class="pt">.</span></h2>
+          <p>Deux mannequins, vingt-deux looks. La doublure se montre là où le vêtement s'ouvre : au panneau, à la capuche, aux revers.</p>
+          <span class="lab lookbook-indice">défilez →</span>
+        </div>
+      </div>
+      <div class="lookbook-jauge" aria-hidden="true"><i></i></div>
+    </div>
+  </section>
+
+  <section class="te" id="te" aria-labelledby="titre-te" data-sombre>
+    <div class="te-tete">
+      <div>
+        <span class="lab">l'autre moitié du nom</span>
+        <h2 id="titre-te">teenage<br>engineering</h2>
+      </div>
+      <div class="te-texte">
+        <p>Studio de design et d'ingénierie fondé à Stockholm en 2005. Synthétiseurs, enceintes, micros, objets : chaque produit se lit comme un schéma, boutons, cotes et fonctions en évidence.</p>
+        <p>Leur système nomade s'appelle <b>field system</b> : un studio qui tient dans la poche, sur batterie, où tout se connecte. La collection lui emprunte son nom. <b>field.</b> habille la journée de fabrication, au studio comme dehors.</p>
+        <dl class="te-chiffres">
+          <div><dt>2005</dt><dd>fondé à Stockholm</dd></div>
+          <div><dt>OP–1</dt><dd>le synthé qui les a révélés</dd></div>
+          <div><dt>field</dt><dd>la gamme nomade</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="te-rail">
+      <a class="te-objet" href="https://teenage.engineering/products/field-system" target="_blank" rel="noopener">
+        <figure><img src="img/marques/te/field-system.webp" alt="Le field system de teenage engineering : OP–1 field, TX–6, TP–7 et CM–15" loading="lazy"></figure>
+        <span class="nom"><span>field system™</span><span>↗</span></span>
+        <p>Un studio qui tient dans la poche : créer et enregistrer partout, n'importe quand.</p>
+      </a>
+      <a class="te-objet" href="https://teenage.engineering/products/po" target="_blank" rel="noopener">
+        <figure><img src="img/marques/te/pocket-operator.webp" alt="Un pocket operator, vu de près" loading="lazy"></figure>
+        <span class="nom"><span>pocket operator®</span><span>↗</span></span>
+        <p>De petits instruments ultra-portables, au son de studio, abordables pour tous.</p>
+      </a>
+      <a class="te-objet" href="https://teenage.engineering/products/ob-4" target="_blank" rel="noopener">
+        <figure><img src="img/marques/te/ob-4.webp" alt="L'enceinte OB–4 magic radio" loading="lazy"></figure>
+        <span class="nom"><span>OB–4 magic radio</span><span>↗</span></span>
+        <p>Une enceinte Bluetooth à interface motorisée, radio FM et boucle de bande de deux heures.</p>
+      </a>
+      <a class="te-objet" href="https://teenage.engineering/products/ep-133" target="_blank" rel="noopener">
+        <figure><img src="img/marques/te/ep-133.jpg" alt="Les commandes orange de l'EP–133 K.O. II" loading="lazy"></figure>
+        <span class="nom"><span>EP–133 K.O. II</span><span>↗</span></span>
+        <p>Le sampler qui a donné son orange à la collection : touches grises, commandes orange, rien d'autre.</p>
+      </a>
+    </div>
+    <div class="te-pied">
+      <span class="lab">visuels et descriptions © teenage engineering · teenage.engineering</span>
+      <a class="pilule" href="https://teenage.engineering" target="_blank" rel="noopener">teenage.engineering ↗</a>
+    </div>
+  </section>
+
+  <section class="sortie" id="sortie" aria-labelledby="titre-sortie">
+    <div class="sortie-tete">
+      <span class="lab">la sortie</span>
+      <h2 id="titre-sortie">le 9 octobre<span class="pt">.</span></h2>
+      <p>field. sort le 09.10 en ligne et dans une sélection de boutiques. Les pièces hors gamme partent en série limitée, elles ne seront pas réassorties. Laissez votre adresse, on vous prévient une heure avant l'ouverture.</p>
+    </div>
+
+    <div class="sortie-corps">
+      <form class="inscription" id="inscription" novalidate>
+        <span class="lab">être prévenu</span>
+        <div class="champ">
+          <label class="cache" for="courriel">Votre adresse électronique</label>
+          <input id="courriel" name="courriel" type="email" inputmode="email" autocomplete="email" placeholder="votre adresse" required>
+          <button class="pilule encre" type="submit">Me prévenir</button>
+        </div>
+        <p class="note-champ" id="retour-inscription" role="status" aria-live="polite">Une seule adresse, un seul message, pas de lettre d'information.</p>
+      </form>
+
+      <dl class="contact">
+        <div><dt>une question</dt><dd><a href="mailto:bonjour@field-collection.example">bonjour@field-collection.example</a></dd></div>
+        <div><dt>presse</dt><dd><a href="mailto:presse@field-collection.example">presse@field-collection.example</a></dd></div>
+        <div><dt>en boutique</dt><dd>Paris Opéra, Lyon Part-Dieu, Lille Grand Place, à partir du 09.10</dd></div>
+        <div><dt>retrait</dt><dd>En 1 h dans les boutiques qui ont la pièce en stock</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="pied lab">
+  <span class="pied-marque"><img src="img/marques/logo-collab.svg" alt="UNIQLO and teenage engineering" width="56" height="56" loading="lazy"><span>UNIQLO and TEENAGE ENGINEERING · field.</span></span>
+  <span>Projet pédagogique fictif, non commandité par UNIQLO</span>
+</footer>
+
+<div class="curseur" id="curseur" aria-hidden="true"><span class="curseur-cadre"></span><span class="curseur-points"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="curseur-label"></span></div>
+<div class="voile" id="voile"></div>
+
+<aside class="fiche" id="fiche" role="dialog" aria-modal="true" aria-labelledby="fiche-titre" tabindex="-1">
+  <div class="tete-panneau"><span class="lab" id="fiche-code"></span><button class="fermer" data-fermer>fermer ✕</button></div>
+  <div class="fiche-corps">
+    <div class="galerie">
+      <div class="vue-principale" id="vue-principale"></div>
+      <div class="vignettes" id="vignettes"></div>
+    </div>
+    <div class="infos-fiche">
+      <div>
+        <h2 id="fiche-titre"></h2>
+        <p class="prix-fiche" id="fiche-prix" style="margin-top:12px"></p>
+      </div>
+      <p id="fiche-texte"></p>
+      <div class="choix"><span class="lab">coloris · <span id="fiche-coloris"></span></span><div class="crans" id="fiche-crans" role="group" aria-label="Coloris"></div></div>
+      <div class="choix"><span class="lab">taille</span><div class="tailles" id="fiche-tailles" role="group" aria-label="Taille"></div></div>
+      <button class="pilule encre" id="fiche-ajouter" style="justify-content:center">Ajouter au panier</button>
+      <dl class="assurances">
+        <div><dt>paiement sécurisé</dt><dd>Carte bancaire, Visa, Mastercard, Apple Pay. Connexion chiffrée.</dd></div>
+        <div><dt>livraison</dt><dd>Offerte dès 60 €, sous 2 à 4 jours ouvrés.</dd></div>
+        <div><dt>retrait en magasin</dt><dd>En 1 h dans les boutiques qui ont la pièce en stock.</dd></div>
+        <div><dt>retour</dt><dd>Sous 30 jours, en boutique ou par la poste.</dd></div>
+      </dl>
+      <section class="bloc" id="fiche-recit">
+        <span class="lab">la pièce</span>
+        <h3 id="fiche-recit-titre"></h3>
+        <div id="fiche-recit-texte"></div>
+      </section>
+      <section class="bloc" id="fiche-construction">
+        <span class="lab">construction</span>
+        <div class="etapes-fab" id="fiche-etapes"></div>
+      </section>
+      <section class="bloc">
+        <span class="lab">matière et entretien</span>
+        <dl class="specs" id="fiche-specs"></dl>
+      </section>
+      <section class="bloc" id="fiche-guide">
+        <span class="lab">guide des tailles</span>
+        <table class="mesures" id="fiche-mesures"></table>
+        <p class="note">Mesures du vêtement à plat, en centimètres. La coupe est volontairement large : prenez votre taille habituelle.</p>
+      </section>
+      <section class="bloc" id="fiche-looks">
+        <span class="lab">portée dans</span>
+        <div class="dans-looks" id="fiche-dans-looks"></div>
+      </section>
+    </div>
+  </div>
+</aside>
+
+<aside class="panier" id="panier" role="dialog" aria-modal="true" aria-labelledby="panier-titre" tabindex="-1">
+  <div class="tete-panneau"><span class="mono" id="panier-titre">panier</span><button class="fermer" data-fermer>fermer ✕</button></div>
+  <div class="lignes-panier" id="lignes-panier"></div>
+  <div class="pied-panier">
+    <div class="total"><span>sous-total</span><span id="total-panier">0,00 €</span></div>
+    <span class="lab">livraison offerte dès 60 € · retrait en magasin en 1 h</span>
+    <button class="pilule encre" id="commander">Commander</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const survol = matchMedia('(hover: hover)').matches;
+
+// catalogue
+// chaque coloris se lit en deux temps : la couleur de l'extérieur, puis celle de la doublure
+const COLORIS = {
+  '01': ['blanc', '#F4F4F2', '#0071BB'],
+  '02': ['bleu', '#0071BB', '#0071BB'],
+  '03': ['encre', '#1B1B1F', '#0071BB'],
+  '04': ['blanc, doublure orange', '#F4F4F2', '#FF5000'],
+  '05': ['orange', '#FF5000', '#0071BB'],
+  '06': ['encre, doublure orange', '#1B1B1F', '#FF5000'],
+  '07': ['orange et gris chiné', '#F05A24', '#A8A8A4'],
+  '08': ['médiéval', '#1E5B3A', '#9B1B22'],
+  '09': ['orange, doublure noire', '#FF5000', '#1B1B1F'],
+};
+const MOLLETON = {
+  '01': ['gris chiné', '#A8A8A4', '#0071BB'],
+  '03': ['encre', '#1B1B1F', '#0071BB'],
+  '06': ['encre, doublure orange', '#1B1B1F', '#FF5000'],
+};
+const ORANGE = new Set(['04', '05', '06', '07', '09']);
+const VETEMENT = ['XS', 'S', 'M', 'L', 'XL'];
+
+// mesures du vêtement à plat, en centimètres
+const MESURES = {
+  haut: ['poitrine', 'longueur', 'épaule', {
+    XS: [108, 64, 52], S: [112, 66, 54], M: [116, 68, 56], L: [122, 70, 59], XL: [128, 72, 62] }],
+  bas: ['ceinture', 'entrejambe', 'bas de jambe', {
+    XS: [64, 70, 24], S: [68, 71, 25], M: [72, 72, 26], L: [78, 73, 27], XL: [84, 74, 28] }],
+};
+
+const PIECES = {
+  'FW-03': { nom: 'Sweat zippé à capuche', prix: 39.9, zone: 'a', type: 'phare', coloris: ['01', '06'], molleton: true, tailles: VETEMENT, guide: 'haut',
+    recit: ['Le vestiaire de travail du field system', "Le sweat est la pièce d'atelier de la collection : on l'enfile par-dessus tout, on l'ouvre quand on s'assoit, on le laisse ouvert pendant qu'on enregistre. Sa coupe boxy vient des blousons de mécanicien japonais, à qui il emprunte aussi les épaules basses.", "Tout le travail est allé à l'intérieur. Dehors, un molleton mat sans logo ni couleur. Dedans, la doublure bleue à points sur toute la surface, visible au premier geste."],
+    construction: [['La coupe', "Épaules tombantes, emmanchures basses, corps droit. Le vêtement garde sa forme posé à plat."], ['Le rembourrage', "Une ouate fine prise entre le molleton et la doublure, piquée dans le sens de la maille pour ne pas raidir la pièce."], ['Le zip', "Zip métal argenté à double curseur. Les 9 points sont gravés dans la masse de la tirette, pas imprimés dessus.", 'img/detail-zip.jpg'], ['Le col', "Une étiquette blanche tissée aux 9 points, cousue à l'intérieur du col, seule signature de la pièce."]],
+    texte: "Molleton brossé, légèrement rembourré sur toute la pièce. Coupe oversized et boxy, épaules larges, tenue structurée. Zip métal argenté, les 9 points gravés sur la tirette. Ouvert, toute la doublure apparaît.",
+    portees: ['LOOK-01', 'LOOK-07', 'LOOK-19', 'LOOK-21', 'LOOK-18'],
+    film: { src: '../videos/sweat-fantome.mp4', affiche: 'img/affiche-fantome.jpg' },
+    details: [['img/detail-zip.jpg', 'la tirette']],
+    specs: [['matière', 'molleton coton, rembourré'], ['coupe', 'oversized, boxy'], ['fermeture', 'zip métal, tirette gravée'], ['doublure', 'bleue à points'], ['entretien', '30 °C']] },
+  'FW-01': { nom: 'Doudoune sans manches', prix: 69.9, zone: 'b', coloris: ['01', '03', '04'], tailles: VETEMENT, guide: 'haut',
+    recit: ['La grille, rendue visible', "Le matelassage reprend exactement la grille de la doublure : mêmes carrés, même pas. Ce qui est imprimé à l'intérieur des autres pièces devient ici une structure qu'on voit de dehors.", "En blanc, la doublure orange ne se devine qu'au col et aux emmanchures. Ouverte, elle prend toute la place."],
+    construction: [['Le matelassage', "Carrés de 6 cm piqués sur toute la surface, dans l'axe du corps."], ['Le garnissage', "Une ouate synthétique légère, choisie pour rester compressible : la pièce tient dans un sac."], ['Le col', "Col montant doublé, fermé par un zip qui remonte jusqu'au menton."]],
+    texte: "Matelassage en carrés, la même grille que la doublure. Coupe courte et large, col montant.",
+    portees: ['LOOK-03', 'LOOK-22'],
+    specs: [['matière', 'toile mate'], ['garnissage', 'synthétique'], ['doublure', 'bleue à points'], ['entretien', '30 °C']] },
+  'FW-05': { nom: 'T-shirt', prix: 24.9, zone: 'c', coloris: ['01', '02', '03'], tailles: VETEMENT, guide: 'haut',
+    recit: ['Le degré zéro', "C'est la pièce la plus simple de la collection, et celle qui porte le mieux le principe : un jersey lourd, une coupe carrée, rien à l'extérieur.", "Le détail tient dans les revers de manche, qui se retournent sur la doublure à points."],
+    construction: [['Le jersey', "Coton peigné 200 g, tricoté serré pour que le col ne se détende pas."], ['Le col', "Côte 2 × 2 rapportée, montée au point de chaînette."], ['Les revers', "Manches doublées sur 6 cm, à retourner ou non."]],
+    texte: "Jersey de coton, coupe boxy, col côtelé. Les revers de manche se retournent sur la doublure à points.",
+    portees: ['LOOK-04'],
+    specs: [['matière', 'jersey coton'], ['coupe', 'boxy'], ['détail', 'revers à points'], ['entretien', '30 °C']] },
+  'FW-02': { nom: 'Veste à capuche', prix: 129.9, zone: 'd', coloris: ['01', '03', '05'], tailles: VETEMENT, guide: 'haut',
+    recit: ['La seule pièce qui se voit de loin', "Toute la collection se tait à l'extérieur, sauf celle-ci. En orange, elle emprunte sa couleur au K.O. II de teenage engineering, et devient le point de rendez-vous des looks.", "La capuche est doublée dans le même bleu à points que le reste : la couleur se retourne dès qu'on la rabat."],
+    construction: [['Le panneau avant', "Une patte de boutonnage pleine, sans poche plaquée, pour garder une surface nette."], ['La capuche', "Trois panneaux, doublure à points apparente à l'intérieur, cordon plat sans embout."], ['La toile', "Toile de coton enduite, déperlante, qui garde sa tenue après lavage."]],
+    texte: "Toile lisse, capuche, patte de boutonnage. Le panneau s'ouvre sur toute la doublure.",
+    portees: ['LOOK-02'],
+    specs: [['matière', 'toile lisse'], ['coupe', 'courte, boxy'], ['doublure', 'bleue à points'], ['entretien', '30 °C']] },
+  'FW-06': { nom: 'Sur-chemise', prix: 59.9, zone: 'e', coloris: ['01', '02', '03', '06'], tailles: VETEMENT, guide: 'haut',
+    recit: ['Entre la chemise et la veste', "Assez épaisse pour tenir seule en automne, assez souple pour passer sous la doudoune. C'est la pièce qui fait la liaison dans presque tous les looks.", "Les poignets se retournent sur la doublure : la seule couleur qu'on voit quand on travaille les mains devant soi."],
+    construction: [['Le sergé', "Sergé de coton lavé, 280 g, adouci au lavage à la pierre."], ['Les boutons', "Boutons ton sur ton en corozo, cousus en croix."], ['Les poignets', "Doublés sur 8 cm, prévus pour être retournés."]],
+    texte: "Sergé de coton, boutons ton sur ton, poignets retournés sur la doublure.",
+    portees: ['LOOK-06'],
+    specs: [['matière', 'sergé coton'], ['coupe', 'droite'], ['doublure', 'bleue à points'], ['entretien', '30 °C']] },
+  'FW-04': { nom: 'Jogging', prix: 49.9, zone: 'f', coloris: ['01', '06'], molleton: true, tailles: VETEMENT, guide: 'bas',
+    recit: ['Le bas du sweat', "Même molleton, même poids, même coupe large que le FW-03 : les deux pièces se portent ensemble sans se répondre en dégradé.", "La taille est élastique et sans cordon, pour que rien ne dépasse sous une pièce ouverte."],
+    construction: [['La jambe', "Coupe droite et large, sans resserrage à la cheville."], ['La taille', "Élastique large pris dans la ceinture, sans cordon ni œillet."], ['Les revers', "Bas de jambe doublé bleu à points sur 9 cm."]],
+    texte: "Molleton, jambe large, taille élastique sans cordon, comme le sweat. Revers bleus à points aux chevilles.",
+    portees: ['LOOK-05', 'LOOK-01', 'LOOK-21'],
+    specs: [['matière', 'molleton coton'], ['coupe', 'jambe large'], ['détail', 'revers à points'], ['entretien', '30 °C']] },
+  'FW-07': { nom: 'Chaussettes hautes', prix: 12.9, zone: 'g', coloris: ['01', '02', '03'], tailles: ['35-38', '39-42', '43-46'],
+    recit: ['Le détail qui dépasse', "La chaussette est la seule pièce que l'on voit sans l'avoir choisie : elle apparaît quand le jogging remonte, assise ou en marchant.", "Son revers reprend la doublure, en côte large."],
+    construction: [['La côte', "Côte large 3 × 1, tige mi-mollet qui ne glisse pas."], ['Le revers', "Deux centimètres de doublure à points, à rabattre."], ['Le pied', "Talon et pointe renforcés, coton peigné."]],
+    texte: "Côte large, tige mi-mollet. Rabattez le revers : la doublure à points.",
+    portees: ['LOOK-05'],
+    specs: [['matière', 'coton peigné'], ['hauteur', 'mi-mollet'], ['détail', 'revers à points'], ['entretien', '40 °C']] },
+  'FW-08': { nom: 'Bonnet', prix: 19.9, zone: 'h', coloris: ['01', '02', '03', '06'], tailles: ['taille unique'],
+    recit: ["Le plus petit format de l'idée", "Un bonnet court, en côte fine, qui se porte au ras des oreilles. Retourné, il montre sa doublure sur tout le revers.", "C'est la pièce sur laquelle le motif de 9 points est le plus près du visage : il est tissé, jamais brodé."],
+    construction: [['La côte', "Côte 1 × 1 en laine mélangée, tricotée sans couture."], ['Le revers', "Doublure à points sur 7 cm, prévue pour être retournée."], ['Le motif', "Les 9 points sont tricotés dans la matière, sur le revers gauche."]],
+    texte: "Côte fine, revers court. Retourné, il montre sa doublure.",
+    portees: ['LOOK-04'],
+    specs: [['matière', 'laine mélangée'], ['forme', 'courte'], ['détail', 'revers doublé'], ['entretien', 'main']] },
+  'FW-09': { nom: 'Casquette', prix: 14.9, zone: 'i', coloris: ['01', '06'], tailles: ['taille unique'],
+    texte: "Six panneaux de sergé de coton, calotte souple, visière courbe. Les 9 points brodés sur le panneau avant gauche, la doublure à points sous la visière.",
+    portees: ['LOOK-14'],
+    recit: ['Le motif, à hauteur de regard', "C'est la seule pièce où les 9 points se portent devant, à hauteur de visage. Ils sont brodés au même pas que sur les autres pièces, mais sans l'étiquette : la casquette n'a rien d'autre à dire.", "Sous la visière, la même doublure imprimée que dans le reste de la collection. On ne la voit que soi, en la mettant."],
+    construction: [['Les panneaux', "Six panneaux de sergé lavé, coutures surpiquées, calotte souple qui s'écrase dans un sac."], ['La broderie', "Neuf points brodés sur le panneau avant gauche, jamais sur le devant central."], ['La visière', "Visière courbe préformée, doublée du tissu à points."]],
+    specs: [['matière', 'sergé coton lavé'], ['calotte', 'souple, six panneaux'], ['réglage', 'boucle métal'], ['doublure', 'à points'], ['entretien', 'main']] },
+  'FW-11': { nom: 'Polo rugby patchwork', prix: 59.9, hors: true, coloris: ['07'], tailles: VETEMENT, guide: 'haut',
+    dapres: ['EP–133 K.O. II', 'https://teenage.engineering/products/ep-133'],
+    portees: ['LOOK-11', 'LOOK-24', 'LOOK-23'],
+    details: [['img/detail-FW-11.jpg', 'la couture']],
+    texte: "Molleton de coton gratté, quatre panneaux orange et gris chiné, col polo en côte. Étiquette de poitrine K.O. Ⅱ, numéro de pièce brodé.",
+    recit: ['La machine, portée', "L'EP–133 K.O. II est gris clair, avec des touches orange qui tombent là où il faut appuyer. Le polo reprend ce rapport exact : un fond gris, deux aplats orange, rien d'autre.", "Le nom de la pièce est brodé comme sur la façade de la machine, en petit, à sa place."],
+    construction: [['Les panneaux', "Quatre panneaux assemblés en croix, coutures rabattues et surpiquées."], ['Le col', "Col polo en côte, deux boutons, liseré orange repris des touches."], ['Les bords', "Poignets et bas de corps en côte contrastée orange."]],
+    specs: [['matière', 'molleton coton gratté'], ['coupe', 'oversized, boxy'], ['col', 'polo, deux boutons'], ['série', 'limitée'], ['entretien', '30 °C']] },
+  'FW-12': { nom: 'Rugby médiéval', prix: 69.9, hors: true, coloris: ['08'], tailles: VETEMENT, guide: 'haut',
+    dapres: ['EP–1320 medieval', 'https://teenage.engineering/store/ep-1320'],
+    portees: ['LOOK-12', 'LOOK-26', 'LOOK-25'],
+    details: [['img/detail-FW-12.jpg', 'la broderie']],
+    texte: "Toile de coton lavée, six panneaux vert, rouge, brun et noir, col chemise blanc. Lettrage gothique brodé rouge.",
+    recit: ["L'autre bout du catalogue", "teenage engineering a sorti l'EP–1320 medieval, un sampler rempli de sons médiévaux. La pièce prend la blague au sérieux : les couleurs des enluminures, un lettrage gothique, et une coupe de maillot de rugby des années 1970.", "C'est la seule pièce du projet où le motif de 9 points n'apparaît pas au fil : il est estampé sur le bouton de col."],
+    construction: [['Les panneaux', "Six panneaux de toile lavée à la pierre, montés en quartiers."], ['Le col', "Col chemise en toile blanche, patte à trois boutons renforcée."], ['La broderie', "Lettrage gothique brodé rouge, poitrine et bas de dos."]],
+    specs: [['matière', 'toile coton lavée'], ['coupe', 'rugby, boxy'], ['col', 'chemise, trois boutons'], ['série', 'limitée'], ['entretien', '30 °C']] },
+  'FW-13': { nom: 'Veste de terrain', prix: 149.9, hors: true, coloris: ['09', '06'], tailles: VETEMENT, guide: 'haut',
+    dapres: ['EP–133 K.O. II', 'https://teenage.engineering/products/ep-133'],
+    portees: ['LOOK-13', 'LOOK-17', 'LOOK-15', 'LOOK-16'],
+    film: { src: '../videos/veste-rotation.mp4', affiche: 'img/affiche-veste.jpg' },
+    texte: "Nylon technique mat, blouson à épaules larges, emmanchure basse, manche ample resserrée sur un poignet élastiqué, corps court sur ceinture élastiquée. Doublure noire à parementures orange, les 9 points imprimés à l'intérieur.",
+    recit: ['La pièce la plus travaillée du projet', "C'est la seule vraie veste : nylon technique mat, doublure matelassée, col qui monte jusqu'au menton. Le volume est celui des blousons du milieu des années 1980, épaule large et rembourrée qui dépasse la carrure, emmanchure descendue, manche ample, corps court arrêté net sur la ceinture élastiquée.", "Son marquage se lit comme la façade d'une machine : un bloc de commande à gauche, un bloc d'identité à droite, séparés par le zip. Tout le reste est laissé nu, y compris le dos."],
+    construction: [['Le nylon', "Nylon technique mat, déperlant, coutures thermocollées aux épaules."], ["L'épaule", "Épaule large et rembourrée qui dépasse la carrure, emmanchure descendue presque à la taille : le volume vient de la coupe, pas du garnissage."], ['La manche', "Manche ample montée en chauve-souris, resserrée d'un coup sur un poignet élastiqué."], ['La doublure', "Doublure noire, parementures orange le long du zip, les 9 points imprimés en orange sur la parementure gauche."]],
+    specs: [['matière', 'nylon technique'], ['garnissage', 'matelassé léger'], ['coupe', 'boxy, néo-rétro'], ['série', 'limitée'], ['entretien', '30 °C']] },
+};
+const teinte = (code, c) => (PIECES[code].molleton ? MOLLETON : COLORIS)[c];
+// la pastille montre l'extérieur, et la doublure dans son coin
+const pastille = (code, c) => {
+  const [, dehors, dedans] = teinte(code, c);
+  return dehors === dedans ? dehors : `linear-gradient(135deg,${dehors} 0 66%,${dedans} 66%)`;
+};
+const euros = (n) => n.toFixed(2).replace('.', ',') + ' €';
+const img = (code, c) => `img/${code}-${c}.jpg`;
+const portee = (nom) => `img/portees/${nom}.jpg`;
+const PAYSAGES = new Set(['LOOK-07', 'LOOK-18']);
+
+// grille
+const grille = document.getElementById('grille');
+for (const [code, p] of Object.entries(PIECES)) {
+  if (p.hors) continue;
+  const carte = document.createElement('article');
+  carte.className = `carte ${p.type ?? ''}`;
+  carte.style.gridArea = p.zone;
+  carte.dataset.code = code;
+  // au survol : la pièce portée si elle existe, sinon l'autre coloris
+  const imageSurvol = p.portees ? portee(p.portees[0]) : img(code, p.coloris[p.coloris.length - 1]);
+  let media = `<img src="${img(code, p.coloris[0])}" alt="" loading="lazy"><img class="alt${p.portees ? ' porte' : ''}" src="${imageSurvol}" alt="" loading="lazy">`;
+  if (p.film) media += `<video src="${p.film.src}" muted loop playsinline preload="none"></video>`;
+  carte.innerHTML = `
+    <div class="carte-media">${media}</div>
+    <div class="legende">
+      <span class="code">${code}</span>
+      <button class="plus" aria-label="Ajouter ${p.nom} au panier">+</button>
+      <a class="nom" href="#${code}" data-ouvrir>${p.nom}</a>
+      <span class="prix">${euros(p.prix)}</span>
+      <span class="teintes">${p.coloris.map(c => `<i style="background:${pastille(code, c)}" title="${teinte(code, c)[0]}"></i>`).join('')}</span>
+    </div>`;
+  grille.appendChild(carte);
+
+  const video = carte.querySelector('video');
+  if (video && survol && !reduit) {
+    carte.addEventListener('pointerenter', () => { video.preload = 'auto'; video.play().catch(() => {}); });
+    carte.addEventListener('pointerleave', () => video.pause());
+  }
+  carte.addEventListener('click', (e) => {
+    if (e.target.closest('.plus')) {
+      e.preventDefault();
+      ajouter(code, p.coloris[0], p.tailles[Math.min(2, p.tailles.length - 1)]);
+      carte.classList.add('ajoute');
+      setTimeout(() => carte.classList.remove('ajoute'), 900);
+      return;
+    }
+    e.preventDefault();
+    ouvrirFiche(code, 'collection');
+  });
+}
+
+// hors collection : les trois pièces spéciales, dans leur propre grille
+const grilleHors = document.getElementById('grille-hors');
+for (const [code, p] of Object.entries(PIECES)) {
+  if (!p.hors) continue;
+  const carte = document.createElement('article');
+  carte.className = 'carte hors-carte';
+  carte.dataset.code = code;
+  const second = p.coloris[1];
+  carte.innerHTML = `
+    <div class="carte-media">
+      <img src="${img(code, p.coloris[0])}" alt="" loading="lazy">
+      ${second ? `<img class="alt" src="${img(code, second)}" alt="" loading="lazy">` : ''}
+      ${p.film ? `<video src="${p.film.src}" muted loop playsinline preload="none"></video>` : ''}
+    </div>
+    <div class="legende">
+      <span class="code">${code}</span>
+      <button class="plus" aria-label="Ajouter ${p.nom} au panier">+</button>
+      <a class="nom" href="#${code}" data-ouvrir>${p.nom}</a>
+      <span class="prix">${euros(p.prix)}</span>
+      <span class="teintes">${p.coloris.map(c => `<i style="background:${pastille(code, c)}" title="${teinte(code, c)[0]}"></i>`).join('')}</span>
+    </div>
+    <a class="dapres" href="${p.dapres[1]}" target="_blank" rel="noopener">d'après <b>${p.dapres[0]}</b> ↗</a>`;
+  grilleHors.appendChild(carte);
+  const film = carte.querySelector('video');
+  if (film && survol && !reduit) {
+    carte.addEventListener('pointerenter', () => { film.preload = 'auto'; film.play().catch(() => {}); });
+    carte.addEventListener('pointerleave', () => film.pause());
+  }
+  carte.addEventListener('click', (e) => {
+    if (e.target.closest('.dapres')) return;
+    e.preventDefault();
+    if (e.target.closest('.plus')) {
+      ajouter(code, p.coloris[0], p.tailles[Math.min(2, p.tailles.length - 1)]);
+      carte.classList.add('ajoute');
+      setTimeout(() => carte.classList.remove('ajoute'), 900);
+      return;
+    }
+    ouvrirFiche(code, 'lookbook');
+  });
+}
+
+// curseur : suit la souris sans retard, change d'état selon ce qu'il survole.
+// Au doigt ou au stylet, le curseur du système reste en place.
+const curseur = document.getElementById('curseur');
+const libelle = curseur.querySelector('.curseur-label');
+if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let x = 0, y = 0, cible = null, image = 0;
+  const etat = (el) => {
+    if (!el) return ['', ''];
+    if (el.closest('.carte-media')) return ['voir', 'voir la pièce'];
+    if (el.closest('button, [role=button], .carte, .vignette, .look .pieces button')) return ['action', ''];
+    if (el.closest('a[href]')) return ['lien', ''];
+    return ['', ''];
+  };
+  const dessiner = () => {
+    image = 0;
+    curseur.style.transform = `translate3d(${x}px,${y}px,0)`;
+    const [nom, texte] = etat(cible);
+    curseur.classList.toggle('lien', nom === 'lien');
+    curseur.classList.toggle('action', nom === 'action');
+    curseur.classList.toggle('voir', nom === 'voir');
+    if (texte) libelle.textContent = texte;
+    // blanc sur les sections sombres, sauf dans un panneau ouvert par-dessus
+    curseur.classList.toggle('clair', !!cible?.closest('[data-sombre]') && !cible.closest('.fiche, .panier'));
+  };
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY; cible = e.target;
+    if (!curseur.classList.contains('visible')) { document.documentElement.classList.add('curseur-actif'); curseur.classList.add('visible'); }
+    if (!image) image = requestAnimationFrame(dessiner);
+  }, { passive: true });
+  // la page défile sous un curseur immobile : son état suit ce qui passe dessous
+  addEventListener('scroll', () => { if (!image && curseur.classList.contains('visible')) { cible = document.elementFromPoint(x, y); image = requestAnimationFrame(dessiner); } }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => curseur.classList.remove('visible'));
+  addEventListener('pointerdown', () => curseur.classList.add('appui'));
+  addEventListener('pointerup', () => curseur.classList.remove('appui'));
+}
+
+// panneaux
+const voile = document.getElementById('voile');
+let panneauOuvert = null, retourFocus = null;
+const ouvrirPanneau = (el) => {
+  if (panneauOuvert && panneauOuvert !== el) panneauOuvert.classList.remove('on');
+  retourFocus = document.activeElement;
+  panneauOuvert = el;
+  el.classList.add('on'); voile.classList.add('on');
+  document.documentElement.style.overflow = 'hidden';
+  setTimeout(() => el.focus(), 60);
+};
+const fermerPanneau = () => {
+  if (!panneauOuvert) return;
+  panneauOuvert.classList.remove('on'); voile.classList.remove('on');
+  panneauOuvert.querySelectorAll('video').forEach(v => v.pause());
+  document.documentElement.style.overflow = '';
+  panneauOuvert = null;
+  retourFocus?.focus?.();
+};
+voile.addEventListener('click', fermerPanneau);
+document.querySelectorAll('[data-fermer]').forEach(b => b.addEventListener('click', fermerPanneau));
+addEventListener('keydown', (e) => { if (e.key === 'Escape') fermerPanneau(); });
+
+// fiche produit
+const fiche = document.getElementById('fiche');
+const vuePrincipale = document.getElementById('vue-principale');
+const vignettes = document.getElementById('vignettes');
+let choix = { code: null, coloris: null, taille: null };
+
+const montrer = (element) => vuePrincipale.replaceChildren(element);
+const mediaImage = (src, alt) => {
+  const i = document.createElement('img');
+  i.src = src; i.alt = alt;
+  return i;
+};
+// depuis vaut « collection » (on ouvre la fiche sur la pièce portée) ou « lookbook » (on l'ouvre à plat)
+const ouvrirFiche = (code, depuis = 'lookbook') => {
+  const p = PIECES[code];
+  choix = { code, coloris: p.coloris[0], taille: p.tailles[Math.min(2, p.tailles.length - 1)] };
+  document.getElementById('fiche-code').textContent = `${code} · field.`;
+  document.getElementById('fiche-titre').textContent = p.nom;
+  document.getElementById('fiche-prix').textContent = euros(p.prix);
+  document.getElementById('fiche-texte').textContent = p.texte;
+  document.getElementById('fiche-specs').innerHTML = p.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+  remplirRecit(p);
+  remplirLooks(p, code);
+
+  const elements = [
+    ...p.coloris.map(c => ({ libelle: teinte(code, c)[0], vignette: img(code, c), coloris: c, creer: () => mediaImage(img(code, c), `${p.nom}, coloris ${teinte(code, c)[0]}`) })),
+    ...(p.portees ?? []).map(nom => ({ libelle: 'porté', vignette: portee(nom), portee: true, creer: () => {
+      const i = mediaImage(portee(nom), `${p.nom}, porté`);
+      i.classList.add('portee');
+      if (PAYSAGES.has(nom)) i.classList.add('paysage');
+      return i;
+    } })),
+    ...(p.film ? [{ libelle: 'porté, en mouvement', vignette: p.film.affiche, creer: () => {
+      const v = document.createElement('video');
+      Object.assign(v, { src: p.film.src, poster: p.film.affiche, muted: true, loop: true, playsInline: true, autoplay: !reduit });
+      v.setAttribute('aria-label', `${p.nom}, porté en mouvement`);
+      return v;
+    } }] : []),
+    ...(p.details ?? []).map(([src, libelle]) => ({ libelle, vignette: src, creer: () => {
+      const i = mediaImage(src, `${p.nom}, ${libelle}`);
+      i.classList.add('portee');
+      return i;
+    } })),
+  ];
+  // ouverte depuis la collection, la fiche commence par une photo portée
+  if (depuis === 'collection') {
+    const i = elements.findIndex(el => el.portee);
+    if (i > 0) elements.unshift(elements.splice(i, 1)[0]);
+  }
+  vignettes.innerHTML = '';
+  elements.forEach((el, i) => {
+    const b = document.createElement('button');
+    b.className = 'vignette';
+    b.setAttribute('aria-label', `Voir : ${el.libelle}`);
+    b.setAttribute('aria-current', i === 0);
+    b.innerHTML = `<img src="${el.vignette}" alt=""${el.portee ? ' class="portee"' : ''}><span class="lab">${el.libelle}</span>`;
+    b.querySelector('img').addEventListener('error', () => b.remove());
+    b.addEventListener('click', () => {
+      vignettes.querySelectorAll('.vignette').forEach(x => x.setAttribute('aria-current', 'false'));
+      b.setAttribute('aria-current', 'true');
+      if (el.coloris) choisirColoris(el.coloris, false);
+      montrer(el.creer());
+    });
+    vignettes.appendChild(b);
+  });
+  montrer(elements[0].creer());
+
+  const crans = document.getElementById('fiche-crans');
+  crans.innerHTML = p.coloris.map(c => `<button class="cran" data-c="${c}" aria-pressed="${c === choix.coloris}" aria-label="${teinte(code, c)[0]}"><i style="background:${pastille(code, c)}"></i></button>`).join('');
+  crans.querySelectorAll('.cran').forEach(b => b.addEventListener('click', () => choisirColoris(b.dataset.c, true)));
+  document.getElementById('fiche-coloris').textContent = teinte(code, choix.coloris)[0];
+
+  const tailles = document.getElementById('fiche-tailles');
+  tailles.innerHTML = p.tailles.map(t => `<button class="taille" aria-pressed="${t === choix.taille}">${t}</button>`).join('');
+  tailles.querySelectorAll('.taille').forEach(b => b.addEventListener('click', () => {
+    tailles.querySelectorAll('.taille').forEach(x => x.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true'); choix.taille = b.textContent;
+  }));
+  document.querySelector('.fiche-corps').scrollTop = 0;
+  ouvrirPanneau(fiche);
+};
+
+// récit, construction, guide des tailles
+const remplirRecit = (p) => {
+  const bloc = document.getElementById('fiche-recit');
+  bloc.hidden = !p.recit;
+  if (p.recit) {
+    document.getElementById('fiche-recit-titre').textContent = p.recit[0];
+    document.getElementById('fiche-recit-texte').innerHTML = p.recit.slice(1).map(t => `<p>${t}</p>`).join('');
+  }
+  const construction = document.getElementById('fiche-construction');
+  construction.hidden = !p.construction;
+  if (p.construction) {
+    document.getElementById('fiche-etapes').innerHTML = p.construction.map(([titre, texte, image], i) => `
+      <div class="etape-fab">
+        <span class="num">${String(i + 1).padStart(2, '0')}</span>
+        <div><h4>${titre}</h4><p>${texte}</p></div>
+        ${image ? `<img src="${image}" alt="${titre}, en gros plan" loading="lazy">` : ''}
+      </div>`).join('');
+  }
+  const guide = document.getElementById('fiche-guide');
+  const mesures = MESURES[p.guide];
+  guide.hidden = !mesures;
+  if (mesures) {
+    const [a, b, c, lignes] = mesures;
+    document.getElementById('fiche-mesures').innerHTML =
+      `<thead><tr><th>taille</th><th>${a}</th><th>${b}</th><th>${c}</th></tr></thead><tbody>` +
+      Object.entries(lignes).map(([t, v]) => `<tr><td>${t}</td>${v.map(x => `<td>${x}</td>`).join('')}</tr>`).join('') +
+      '</tbody>';
+  }
+};
+
+// « portée dans » : les looks du lookbook où la pièce apparaît
+const remplirLooks = (p, code) => {
+  const bloc = document.getElementById('fiche-looks');
+  bloc.hidden = !p.portees?.length;
+  if (!p.portees?.length) return;
+  const zone = document.getElementById('fiche-dans-looks');
+  zone.innerHTML = p.portees.map(nom => `<button type="button" data-look="${nom}"><img src="${portee(nom)}" alt="${p.nom}, porté dans le look ${nom.slice(-2)}" loading="lazy"><span class="lab">${nom}</span></button>`).join('');
+  zone.querySelectorAll('[data-look]').forEach(b => b.addEventListener('click', () => {
+    fermerPanneau();
+    document.getElementById('lookbook')?.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth' });
+  }));
+};
+
+const choisirColoris = (c, afficherImage) => {
+  choix.coloris = c;
+  document.querySelectorAll('#fiche-crans .cran').forEach(b => b.setAttribute('aria-pressed', b.dataset.c === c));
+  document.getElementById('fiche-coloris').textContent = teinte(choix.code, c)[0];
+  if (afficherImage) {
+    montrer(mediaImage(img(choix.code, c), `${PIECES[choix.code].nom}, coloris ${teinte(choix.code, c)[0]}`));
+    vignettes.querySelectorAll('.vignette').forEach(b => b.setAttribute('aria-current', b.getAttribute('aria-label') === `Voir : ${teinte(choix.code, c)[0]}`));
+  }
+};
+document.getElementById('fiche-ajouter').addEventListener('click', () => ajouter(choix.code, choix.coloris, choix.taille, true));
+addEventListener('hashchange', () => { const c = location.hash.slice(1); if (PIECES[c]) ouvrirFiche(c); });
+
+// panier
+const panier = document.getElementById('panier');
+const lire = () => { try { return JSON.parse(localStorage.getItem('field-panier') || '[]'); } catch { return []; } };
+const ecrire = (l) => { try { localStorage.setItem('field-panier', JSON.stringify(l)); } catch {} };
+let lignes = lire();
+const toast = document.getElementById('toast');
+let minuterieToast = 0;
+const annoncer = (texte) => { toast.textContent = texte; toast.classList.add('on'); clearTimeout(minuterieToast); minuterieToast = setTimeout(() => toast.classList.remove('on'), 2200); };
+
+const ajouter = (code, coloris, taille, depuisFiche = false) => {
+  const cle = `${code}|${coloris}|${taille}`;
+  const l = lignes.find(x => x.cle === cle);
+  if (l) l.qte++; else lignes.push({ cle, code, coloris, taille, qte: 1 });
+  ecrire(lignes); rendrePanier();
+  const b = document.getElementById('ouvrir-panier');
+  b.classList.remove('bond'); void b.offsetWidth; b.classList.add('bond');
+  annoncer(`${PIECES[code].nom} · ${teinte(code, coloris)[0]} · ${taille} ajouté`);
+  if (depuisFiche) setTimeout(() => ouvrirPanneau(panier), 450);
+};
+const rendrePanier = () => {
+  const n = lignes.reduce((s, l) => s + l.qte, 0);
+  document.getElementById('compte-panier').textContent = n;
+  const zone = document.getElementById('lignes-panier');
+  if (!lignes.length) { zone.innerHTML = '<p class="vide lab">votre panier est vide</p>'; }
+  else {
+    zone.innerHTML = lignes.map((l, i) => `
+      <div class="ligne-panier">
+        <img src="${img(l.code, l.coloris)}" alt="">
+        <div><span class="nom">${PIECES[l.code].nom}</span><span class="lab">${l.code} · ${teinte(l.code, l.coloris)[0]} · ${l.taille}</span>
+          <div class="qte"><button data-moins="${i}" aria-label="Retirer un">−</button><span>${l.qte}</span><button data-plus="${i}" aria-label="Ajouter un">+</button></div></div>
+        <span class="mono">${euros(PIECES[l.code].prix * l.qte)}</span>
+      </div>`).join('');
+  }
+  document.getElementById('total-panier').textContent = euros(lignes.reduce((s, l) => s + PIECES[l.code].prix * l.qte, 0));
+};
+document.getElementById('lignes-panier').addEventListener('click', (e) => {
+  const plus = e.target.closest('[data-plus]'), moins = e.target.closest('[data-moins]');
+  if (plus) lignes[+plus.dataset.plus].qte++;
+  if (moins) { const i = +moins.dataset.moins; if (--lignes[i].qte <= 0) lignes.splice(i, 1); }
+  if (plus || moins) { ecrire(lignes); rendrePanier(); }
+});
+document.getElementById('ouvrir-panier').addEventListener('click', () => ouvrirPanneau(panier));
+
+// inscription au lancement : démonstration, l'adresse n'est envoyée nulle part
+const inscription = document.getElementById('inscription');
+inscription.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const champ = document.getElementById('courriel');
+  const retour = document.getElementById('retour-inscription');
+  retour.classList.remove('ok', 'erreur');
+  if (!champ.checkValidity()) {
+    retour.classList.add('erreur');
+    retour.textContent = "Il manque une adresse valable, par exemple nom@domaine.fr.";
+    champ.focus();
+    return;
+  }
+  retour.classList.add('ok');
+  retour.textContent = `C'est noté pour ${champ.value}. Vous recevrez un message le 09.10 à 9 h.`;
+  champ.value = '';
+  annoncer('inscription enregistrée');
+});
+document.getElementById('commander').addEventListener('click', () => annoncer('démonstration : pas de paiement'));
+rendrePanier();
+
+// lookbook
+const LOOKS = [
+  ['LOOK-01', 'le sweat ouvert', ['FW-03', 'FW-05', 'FW-04']],
+  ['LOOK-02', "la veste qu'on ouvre", ['FW-02', 'FW-05']],
+  ['LOOK-03', 'les couches', ['FW-01', 'FW-06', 'FW-04']],
+  ['LOOK-04', 't-shirt et bonnet', ['FW-05', 'FW-08']],
+  ['LOOK-06', 'la sur-chemise', ['FW-06', 'FW-05', 'FW-04']],
+  ['LOOK-05', 'le détail du bas', ['FW-04', 'FW-07'], 'carre'],
+  ['LOOK-07', 'au studio', ['FW-03', 'FW-05'], 'large'],
+  ['LOOK-11', 'le polo K.O.', ['FW-11', 'FW-04']],
+  ['LOOK-13', 'la veste de terrain', ['FW-13']],
+  ['LOOK-12', 'le rugby médiéval', ['FW-12']],
+  ['LOOK-18', 'les trois vues', ['FW-03', 'FW-04'], 'large'],
+  ['LOOK-19', "ce qu'on ne voit pas", ['FW-03']],
+  ['LOOK-17', 'ouverte', ['FW-13']],
+  ['LOOK-21', 'posé à plat', ['FW-03', 'FW-04']],
+  ['LOOK-23', 'K.O.', ['FW-11', 'FW-04']],
+  ['LOOK-24', 'la façade', ['FW-11']],
+  ['LOOK-26', 'assise', ['FW-12']],
+  ['LOOK-25', "l'ombre", ['FW-12']],
+  ['LOOK-22', 'la doudoune, à plat', ['FW-01']],
+  ['LOOK-15', 'entre deux rounds', ['FW-13']],
+  ['LOOK-14', 'la casquette', ['FW-09', 'FW-06', 'FW-04']],
+  ['LOOK-16', 'au centre du ring', ['FW-13']],
+];
+const lookbook = document.getElementById('lookbook');
+const piste = document.getElementById('piste');
+piste.insertAdjacentHTML('beforeend', LOOKS.map(([nom, titre, pieces, forme]) => `
+  <figure class="look ${forme ?? ''}">
+    <div class="look-media"><img src="${portee(nom)}" alt="${titre}, porté" decoding="async"></div>
+    <figcaption><span class="code">${nom}</span><span class="titre-look">${titre}</span>
+      <span class="pieces">${pieces.map(c => `<button data-piece="${c}" aria-label="Voir : ${PIECES[c].nom}">${c}</button>`).join('')}</span></figcaption>
+  </figure>`).join(''));
+piste.addEventListener('click', (e) => { const b = e.target.closest('[data-piece]'); if (b) ouvrirFiche(b.dataset.piece, 'lookbook'); });
+
+const looks = [...piste.querySelectorAll('.look')];
+const horizontal = matchMedia('(min-width: 900px)');
+let course = 0, imageLookbook = 0;
+const suivreLookbook = () => {
+  if (!horizontal.matches) return;
+  const p = Math.min(1, Math.max(0, -lookbook.getBoundingClientRect().top / Math.max(1, course)));
+  piste.style.transform = `translate3d(${(-p * course).toFixed(1)}px,0,0)`;
+  lookbook.style.setProperty('--p', p.toFixed(4));
+  // chaque image glisse un peu à contre-sens dans son cadre
+  if (!reduit) looks.forEach(f => { const b = f.getBoundingClientRect(); f.style.setProperty('--decalage', (((b.left + b.width / 2) / innerWidth - .5) * -6).toFixed(2)); });
+};
+// la section est aussi haute que la piste est longue : un pixel de défilement = un pixel de glissement
+const dimensionner = () => {
+  if (!horizontal.matches) { lookbook.style.height = ''; piste.style.transform = ''; return; }
+  course = Math.max(0, piste.offsetWidth - innerWidth);
+  lookbook.style.height = `${innerHeight + course}px`;
+  suivreLookbook();
+};
+addEventListener('scroll', () => { cancelAnimationFrame(imageLookbook); imageLookbook = requestAnimationFrame(suivreLookbook); }, { passive: true });
+addEventListener('resize', dimensionner);
+horizontal.addEventListener('change', dimensionner);
+document.fonts?.ready.then(dimensionner);
+dimensionner();
+
+// apparitions au défilement
+const apparitions = new IntersectionObserver((entrees) => entrees.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vue'); apparitions.unobserve(e.target); } }), { threshold: .35 });
+document.querySelectorAll('.bloc-lignes').forEach(b => apparitions.observe(b));
+
+// le fond de la scène continue s'éloigne pendant que le récit arrive : aucune frontière entre les deux sections
+const continu = document.getElementById('continu');
+const flou = document.getElementById('interieur');
+// le sweat fait un tour complet sur toute la scène : c'est le défilement qui le fait tourner.
+// La vidéo n'a que des images clés : chaque position se trouve sans décoder ce qui la précède.
+const tour = document.getElementById('flou-fond');
+let imageContinu = 0, cibleTour = 0, tempsTour = 0, imageTour = 0;
+const tourner = () => {
+  imageTour = 0;
+  // un léger lissage : le sweat garde un peu d'élan quand le défilement s'arrête
+  tempsTour += (cibleTour - tempsTour) * (reduit ? 1 : .18);
+  if (!tour.seeking && Math.abs(tour.currentTime - tempsTour) > 1 / 60) tour.currentTime = tempsTour;
+  if (Math.abs(cibleTour - tempsTour) > .002) imageTour = requestAnimationFrame(tourner);
+};
+const suivreContinu = () => {
+  const parcouru = -continu.getBoundingClientRect().top;
+  const h = flou.offsetHeight;
+  const q = Math.min(1, Math.max(0, (parcouru - h * .35) / (h * .65)));
+  continu.style.setProperty('--q', q.toFixed(4));
+  if (!tour.duration) return;
+  // de l'entrée de la scène en bas de l'écran jusqu'à sa sortie
+  const course = continu.offsetHeight;
+  const avance = Math.min(1, Math.max(0, (parcouru + innerHeight) / course));
+  cibleTour = avance * (tour.duration - .05);
+  if (!imageTour) imageTour = requestAnimationFrame(tourner);
+};
+addEventListener('scroll', () => { cancelAnimationFrame(imageContinu); imageContinu = requestAnimationFrame(suivreContinu); }, { passive: true });
+tour.addEventListener('loadedmetadata', suivreContinu);
+// chargée en entier avant d'être pilotée : on peut se placer sur n'importe quelle image,
+// même quand le serveur ne sert pas les fichiers par morceaux (comme le serveur Python local)
+fetch(tour.dataset.src).then(r => r.blob()).then(b => { tour.src = URL.createObjectURL(b); }).catch(() => { tour.src = tour.dataset.src; });
+suivreContinu();
+// Safari n'affiche les images d'une vidéo pilotée au défilement qu'après une première lecture
+const amorcer = () => tour.play().then(() => tour.pause()).then(suivreContinu).catch(() => {});
+addEventListener('pointerdown', amorcer, { once: true });
+addEventListener('touchstart', amorcer, { once: true, passive: true });
+
+// la doublure suit le défilement
+const recit = document.getElementById('recit');
+const etapes = [...document.querySelectorAll('.etape')];
+const numero = document.querySelector('.recit-numero span');
+const reperes = [...document.querySelectorAll('.jauge b')];
+// chaque mot du titre devient une ligne masquée qui monte avec un léger décalage
+etapes.forEach(e => {
+  const h2 = e.querySelector('h2');
+  let j = 0;
+  const decouper = (noeud) => [...noeud.childNodes].map(n => {
+    if (n.nodeType === 3) return n.textContent.split(/\s+/).filter(Boolean).map(m => `<span class="mot"><span style="--j:${j++}">${m}</span></span>`).join('');
+    return `<em>${decouper(n)}</em>`;
+  }).join('');
+  h2.setAttribute('aria-label', h2.textContent);
+  h2.innerHTML = decouper(h2);
+});
+let imageRecit = 0;
+const suivreRecit = () => {
+  const r = recit.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, -r.top / (recit.offsetHeight - innerHeight)));
+  recit.style.setProperty('--p', p.toFixed(4));
+  // l'étape i est au repos (d = 0) au centre de son tiers ; elle sort vers le haut (d > 0) ou attend en bas (d < 0)
+  const n = etapes.length;
+  const courant = Math.min(n - 1, Math.floor(p * n));
+  etapes.forEach((e, i) => {
+    let d = p * n - (i + .5);
+    if (i === 0) d = Math.max(0, d);
+    if (i === n - 1) d = Math.min(0, d);
+    d = Math.max(-1, Math.min(1, d * 1.6));
+    e.style.setProperty('--d', d.toFixed(3));
+    e.classList.toggle('active', i === courant);
+  });
+  numero.style.setProperty('--n', courant);
+  reperes.forEach((b, i) => b.classList.toggle('passe', p >= i / (reperes.length - 1) - .001));
+};
+addEventListener('scroll', () => { cancelAnimationFrame(imageRecit); imageRecit = requestAnimationFrame(suivreRecit); }, { passive: true });
+addEventListener('scrollend', suivreRecit);
+suivreRecit();
+
+// le t-shirt tombe quand la collection arrive
+const chute = document.getElementById('film-chute');
+if (reduit) chute.addEventListener('loadedmetadata', () => { chute.currentTime = chute.duration - .05; });
+else new IntersectionObserver(([e], o) => { if (e.isIntersecting) { chute.play().catch(() => {}); o.disconnect(); } }, { threshold: .6 }).observe(chute);
+
+// boucles
+const boucles = document.querySelectorAll('video[autoplay]');
+if (reduit) boucles.forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
+else {
+  // une boucle ne tourne que lorsqu'elle est à l'écran : hors champ, elle ne coûte rien
+  const aLEcran = new Set();
+  const vues = new IntersectionObserver((entrees) => entrees.forEach(e => {
+    if (e.isIntersecting) { aLEcran.add(e.target); e.target.play().catch(() => {}); }
+    else { aLEcran.delete(e.target); e.target.pause(); }
+  }));
+  boucles.forEach(v => vues.observe(v));
+  // certains navigateurs refusent la lecture avant un premier geste : on relance ce qui est visible
+  const relancer = () => aLEcran.forEach(v => { if (v.paused) v.play().catch(() => {}); });
+  addEventListener('pointerdown', relancer, { once: true });
+  addEventListener('scroll', relancer, { once: true, passive: true });
+}
+
+// la lumière du hero
+const hero = document.getElementById('hero');
+const secours = () => {
+  hero.classList.add('sans-gpu');
+  const v = hero.querySelector('.secours');
+  if (!reduit) v.play().catch(() => {});
+};
+// ouverture : la vidéo finit sur le motif brodé, l'effet s'allume exactement dessus
+// Points brodés mesurés sur l'image de fin de chaque vidéo : centre en fractions de l'image,
+// écart et rayon en fractions de sa hauteur. taille : celle de l'image de fin, qui a le cadrage de la vidéo.
+// cadrage : où l'image se cale quand elle est rognée (object-position).
+const OUVERTURE = {
+  // calée à gauche : sur un écran moins large que du 16:9, le motif s'écarte du titre
+  paysage: { src: '../videos/ouverture-hero.mp4', affiche: 'img/affiche-ouverture-hero.jpg', fin: 'img/fin-ouverture-hero.jpg', taille: [1672, 940], centre: [.4946, .4885], ecart: .1296, rayon: .046, cadrage: [0, .5] },
+  portrait: { src: '../videos/ouverture-hero-portrait.mp4', affiche: 'img/affiche-ouverture-hero-portrait.jpg', fin: 'img/fin-ouverture-hero-portrait.jpg', taille: [768, 1376], centre: [.4818, .2559], ecart: .0844, rayon: .0315, cadrage: [.5, .5] },
+};
+// les points de l'effet couvrent la broderie et leur bord s'estompe sur la moitié du rayon :
+// la lumière se fond dans le fil, et les légers décalages de la broderie ne se voient pas
+const RAYON_EFFET = 1.1;
+const DOUCEUR_EFFET = .5;
+async function preparerOuverture() {
+  const video = document.getElementById('ouverture');
+  const passer = document.getElementById('passer');
+  const reglage = innerWidth < 900 ? OUVERTURE.portrait : OUVERTURE.paysage;
+  const disponible = !reduit && await fetch(reglage.src, { method: 'HEAD' }).then(r => r.ok).catch(() => false);
+  if (!disponible) return undefined;
+  hero.classList.add('intro');
+  video.poster = reglage.affiche;
+  video.style.objectPosition = `${reglage.cadrage[0] * 100}% ${reglage.cadrage[1] * 100}%`;
+  const fin = document.getElementById('fin-ouverture');
+  fin.src = reglage.fin;
+  fin.style.objectPosition = video.style.objectPosition;
+  // décodée pendant que la vidéo joue : pas d'à-coup au moment où elle s'affiche
+  fin.decode().catch(() => {});
+  video.src = reglage.src;
+  video.preload = 'auto';
+  const finir = () => {
+    if (!hero.classList.contains('intro')) return;
+    video.pause();
+    hero.classList.replace('intro', 'intro-finie');
+    passer.hidden = true;
+  };
+  video.addEventListener('ended', finir, { once: true });
+  passer.hidden = false;
+  // la dernière image est déjà là, en image fixe : passer l'intro revient à l'afficher
+  passer.addEventListener('click', finir, { once: true });
+  video.play().catch(() => { hero.classList.remove('intro'); passer.hidden = true; video.removeAttribute('src'); });
+  // l'effet lit la position des points brodés sur la dernière image telle qu'elle est cadrée (object-fit: cover)
+  return () => {
+    if (!hero.classList.contains('intro-finie')) return null;
+    const r = fin.getBoundingClientRect();
+    const [largeur, hauteur] = reglage.taille;
+    const s = Math.max(r.width / largeur, r.height / hauteur);
+    const ox = (r.width - largeur * s) * reglage.cadrage[0];
+    const oy = (r.height - hauteur * s) * reglage.cadrage[1];
+    const h = hauteur * s / r.height;
+    return {
+      x: (reglage.centre[0] * largeur * s + ox) / r.width,
+      y: (reglage.centre[1] * hauteur * s + oy) / r.height,
+      ecart: reglage.ecart * h,
+      rayon: reglage.rayon * h * RAYON_EFFET,
+      douceur: DOUCEUR_EFFET,
+    };
+  };
+}
+
+const effets = import('./js/lumiere.js');
+try {
+  const { monterLumiere } = await effets;
+  await monterLumiere(document.getElementById('lumiere'), {
+    ancre: await preparerOuverture(),
+    // pendant la vidéo d'ouverture, l'effet est caché : inutile de le calculer
+    enPause: () => hero.classList.contains('intro'),
+  });
+} catch { secours(); }
+
+// la trame du bandeau, en direct (vidéo si WebGPU manque)
+const macro = document.getElementById('macro');
+try {
+  const { monterTrame } = await effets;
+  await monterTrame(document.getElementById('trame'), { reserve: document.getElementById('macro-texte') });
+} catch {
+  macro.classList.add('sans-gpu');
+  const v = macro.querySelector('video');
+  v.preload = 'auto';
+  if (!reduit) v.play().catch(() => {});
+}
+
+if (PIECES[location.hash.slice(1)]) ouvrirFiche(location.hash.slice(1));
+</script>
+</body>
+</html>

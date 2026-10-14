@@ -1,0 +1,14 @@
+{
+  "name": "field-lumiere",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs ../../demo-site",
+    "video": "node fixe.mjs ./images-lumiere"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.0",
+    "pngjs": "^7.0.0",
+    "vgpu": "0.4.0"
+  }
+}
