@@ -26,9 +26,11 @@ Le site appelle `../videos/`, donc `demo-site/` et `videos/` doivent rester côt
 
 | Dossier | Contenu |
 |---|---|
-| `demo-site/` | Le site : un seul `index.html` (styles, markup et script), `img/`, et `js/lumiere.js` le bundle WebGPU compilé |
+| `demo-site/` | Le site : un seul `index.html` (styles, markup et script), `img/`, `modeles/` (les trois vedettes en glTF) et `js/`, les modules compilés |
 | `videos/` | Les huit vidéos utilisées par le site |
-| `shader/lumiere/` | Les sources TypeScript et WGSL de l'effet du hero |
+| `shader/lumiere/` | Les sources TypeScript et WGSL de l'effet du hero et de la trame |
+| `shader/vedettes/` | La source du module 3D des vedettes (Three.js) |
+| `shader/tissu/` | La source de la simulation de tissu de la section trame |
 
 Le détail section par section est dans [`demo-site/LISEZMOI.md`](demo-site/LISEZMOI.md).
 
@@ -42,7 +44,13 @@ Le détail section par section est dans [`demo-site/LISEZMOI.md`](demo-site/LISE
 
 **Deux accents, une règle.** Le bleu `#0071BB` appartient à la doublure et aux données, l'orange `#FF5000` appartient à l'action. Les deux valeurs sont relevées sur le CSS de teenage engineering.
 
-**Pas de framework.** HTML, CSS et JavaScript natifs, un seul fichier pour le site.
+**Les pièces vedettes existent en 3D.** Au-dessus de leurs cartes, les trois modèles floutés sont éclairés par une lampe qui suit le curseur. Dans la fiche, on les fait tourner à la main. Le module et les modèles ne sont téléchargés qu'à l'approche de la section, et jamais sur téléphone.
+
+**La trame se touche.** Les deux pans d'un sweat ouvert encadrent la doublure. Ce sont de vraies plaques de tissu épais simulées en Verlet, qui ne s'étirent pas et ne se traversent pas : on en attrape un, il se plie, montre son envers et retombe. Rendu en WebGL2 sans bibliothèque, 4 Ko compressé, et le calcul s'arrête dès que le tissu est immobile.
+
+**La veste FW-13 se lit comme une façade.** Une section sombre relie six repères à leur point sur la veste, avec un réticule qui donne la position en millimètres sous le curseur.
+
+**Pas de framework.** HTML, CSS et JavaScript natifs, un seul fichier pour le site. Three.js seulement pour les modèles 3D, réduit à ce qui sert.
 
 ## Les images
 

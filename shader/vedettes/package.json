@@ -1,0 +1,12 @@
+{
+  "name": "field-vedettes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs ../../demo-site"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.0",
+    "three": "0.186.1"
+  }
+}

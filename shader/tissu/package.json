@@ -1,0 +1,11 @@
+{
+  "name": "field-tissu",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild tissu.js --minify --format=esm --target=es2020 --outfile=../../demo-site/js/tissu.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

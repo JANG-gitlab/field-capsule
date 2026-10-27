@@ -137,6 +137,8 @@ a{color:inherit}
 .macro{position:relative;height:78svh;min-height:440px;overflow:hidden;display:grid;place-items:center;background:var(--accent);color:#fff;text-align:center;cursor:crosshair}
 .macro canvas,.macro video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .macro video{display:none}
+/* les deux pans du sweat ouvert, par-dessus la trame et le texte : tirés vers le milieu, ils le recouvrent */
+.macro #tissu{z-index:1;touch-action:pan-y;filter:drop-shadow(0 0 10px rgba(0,0,0,.34)) drop-shadow(0 16px 26px rgba(0,0,0,.22))}
 .macro.sans-gpu video{display:block}
 /* le texte est centré dans une fenêtre que la trame lui ouvre (voir trame.ts) */
 .macro .bloc-lignes{position:relative;display:flex;flex-direction:column;align-items:center;max-width:calc(100% - 2 * var(--marge));
@@ -162,7 +164,24 @@ a{color:inherit}
 
 /* collection */
 .collection{padding:clamp(56px,9vw,120px) var(--marge) clamp(56px,8vw,110px)}
-/* trois pièces spéciales, en vedette en tête de la collection */
+/* trois pièces spéciales, en vedette en tête de la collection.
+   Au-dessus des cartes, les trois pièces en 3D, floutées, éclairées par une lampe qui suit le curseur. */
+.vedettes{position:relative;padding:clamp(16px,3vw,40px) 0}
+.vedettes-trio{display:block;width:100%;height:0;opacity:0;pointer-events:none;filter:blur(4px);transition:opacity 1.4s var(--meca);
+  --fondu-bas:linear-gradient(#000 45%,transparent 92%);--fondu-cotes:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  -webkit-mask-image:var(--fondu-bas),var(--fondu-cotes);-webkit-mask-composite:source-in;
+  mask-image:var(--fondu-bas),var(--fondu-cotes);mask-composite:intersect}
+.vedettes.en-3d .vedettes-trio{height:clamp(260px,30vw,440px)}
+.vedettes.en-3d .grille-hors{position:relative;margin-top:calc(-1 * clamp(120px,11vw,180px))}
+.vedettes-trio.pret{opacity:1}
+.hors-carte .carte-media{background:transparent}
+.hors-carte .carte-media img{object-fit:contain;padding:5%}
+
+.vue-3d-fiche{position:absolute;inset:0}
+.vue-3d-fiche canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .6s var(--meca);touch-action:pan-y}
+.vue-3d-fiche img{transition:opacity .6s var(--meca)}
+.vue-3d-fiche.pret canvas{opacity:1}
+.vue-3d-fiche.pret img{opacity:0}
 .vedette-tete{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px clamp(20px,4vw,56px);align-items:baseline;
   padding-bottom:14px;margin-bottom:var(--gout);border-bottom:1px solid var(--ligne)}
 .vedette-tete .lab{color:var(--orange)}
@@ -273,6 +292,65 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 }
 
 /* teenage engineering */
+/* la façade : la veste FW-13 lue comme le panneau d'une machine, repères reliés par des traits.
+   Une lumière suit le curseur sur le fond, comme dans le hero ; le réticule donne la position en millimètres. */
+.facade{background:var(--encre);color:var(--fond);padding:clamp(64px,9vw,140px) var(--marge) clamp(40px,5vw,72px);overflow:hidden}
+.facade .lab{color:rgba(245,245,245,.5)}
+.facade-tete{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px clamp(28px,5vw,90px);align-items:end}
+.facade-tete .lab{grid-column:1 / -1}
+.facade h2{font-size:clamp(56px,9.5vw,168px);font-weight:200;letter-spacing:-.055em;line-height:.84}
+.facade h2 .pt{color:var(--orange)}
+.facade-tete p{font-size:clamp(15px,1.2vw,18px);line-height:1.55;color:rgba(245,245,245,.72);max-width:520px}
+/* la veste n'occupe que le milieu de sa photo carrée : la scène rogne le vide au-dessus et en dessous */
+.facade-scene{position:relative;display:grid;grid-template-columns:minmax(0,1fr) min(70svh,46vw) minmax(0,1fr);isolation:isolate;
+  margin-block:calc(clamp(24px,4vw,56px) - min(70svh,46vw) * .14) calc(min(70svh,46vw) * -.14)}
+.facade-tete,.facade-pied{position:relative;z-index:1}
+.facade-scene::before{content:"";position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at var(--lx,50%) var(--ly,45%),rgba(245,245,245,.16),rgba(245,245,245,.04) 28%,transparent 52%)}
+.facade-veste{position:relative;aspect-ratio:1}
+.facade-veste img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .6s var(--meca)}
+.facade-veste .alt{opacity:0}
+.facade-veste.encre img{opacity:0}
+.facade-veste.encre .alt{opacity:1}
+.ancre{position:absolute;left:var(--x);top:var(--y);width:9px;height:9px;margin:-4.5px;border-radius:50%;background:var(--fond);
+  box-shadow:0 0 0 4px rgba(15,14,18,.35);transition:background .3s var(--meca),transform .3s var(--meca)}
+.ancre.actif{background:var(--orange);transform:scale(1.5)}
+.reperes{position:relative;list-style:none}
+.repere{position:absolute;top:var(--y);display:grid;gap:5px;max-width:250px;transform:translateY(-7px);text-align:left;cursor:default}
+.reperes-gauche .repere{right:0;text-align:right;justify-items:end}
+.repere span:last-child{font-size:13px;line-height:1.45;color:rgba(245,245,245,.55);transition:color .3s var(--meca)}
+.repere.actif .lab{color:var(--orange)}
+.repere.actif span:last-child{color:var(--fond)}
+.trait{position:absolute;height:1px;background:rgba(245,245,245,.28);pointer-events:none;transition:background .3s var(--meca)}
+.trait.actif{background:var(--orange)}
+.reticule{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s var(--meca);clip-path:inset(14% 0)}
+.facade-veste:hover .reticule{opacity:1}
+.reticule i{position:absolute;background:rgba(245,245,245,.22)}
+.reticule .rx{left:0;right:0;height:1px;top:var(--ry,50%)}
+.reticule .ry{top:0;bottom:0;width:1px;left:var(--rx,50%)}
+.reticule .releve{position:absolute;left:var(--rx,50%);top:var(--ry,50%);transform:translate(10px,8px);white-space:nowrap;color:rgba(245,245,245,.8)}
+.facade-pied{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 40px;margin-top:clamp(28px,4vw,56px);
+  padding-top:20px;border-top:1px solid rgba(245,245,245,.14)}
+.facade-coloris{display:flex;gap:8px;flex-wrap:wrap}
+.facade-coloris button{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px;border-radius:999px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,245,245,.6);box-shadow:inset 0 0 0 1px rgba(245,245,245,.2)}
+.facade-coloris button i{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1px rgba(245,245,245,.3)}
+.facade-coloris button[aria-pressed="true"]{color:var(--fond);box-shadow:inset 0 0 0 1px var(--orange)}
+.facade-specs{display:flex;flex-wrap:wrap;gap:12px 32px}
+.facade-specs dt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,245,.5)}
+.facade-specs dd{font-size:14px;margin-top:4px}
+@media (max-width:1099px){
+  .facade-tete{grid-template-columns:1fr}
+  .facade-scene{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-block:24px 0}
+  .facade-veste{order:-1;grid-column:1 / -1;width:min(100%,560px);justify-self:center;margin-block:-14% -10%}
+  .facade-scene{gap:18px 28px}
+  .reperes{display:contents}
+  .repere{order:var(--n)}
+  .repere,.reperes-gauche .repere{position:static;transform:none;text-align:left;justify-items:start;max-width:none}
+  .trait,.reticule{display:none}
+  .ancre::after{content:attr(data-n);position:absolute;left:14px;top:-4px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--fond)}
+}
+
 .te{background:#000;color:var(--fond);padding:clamp(64px,9vw,140px) var(--marge) clamp(36px,4vw,56px)}
 .te .lab{color:rgba(245,245,245,.5)}
 .te-tete{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,5vw,90px);align-items:end;margin-bottom:clamp(40px,6vw,88px)}
@@ -539,8 +617,9 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
   <section class="macro" id="macro" aria-label="La trame" data-sombre>
     <canvas id="trame" aria-hidden="true"></canvas>
     <video src="../videos/trame-hero.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+    <canvas id="tissu" aria-hidden="true"></canvas>
     <p class="bloc-lignes" id="macro-texte"><em>la doublure, de près</em><span class="ligne"><span style="--i:0">le même point,</span></span><span class="ligne"><span style="--i:1">sur les neuf pièces.</span></span><small>bleu 0071BB · points blancs · coton</small></p>
-    <span class="lab">passez le curseur sur la trame</span>
+    <span class="lab" id="macro-indice">passez le curseur sur la trame</span>
   </section>
 
   <section class="tirette" id="tirette" aria-labelledby="titre-tirette">
@@ -565,13 +644,60 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
         <figure class="chute"><video id="film-chute" src="../videos/chute-tshirt.mp4" muted playsinline preload="auto" aria-hidden="true"></video></figure>
       </div>
     </div>
-    <div class="vedette-tete">
-      <span class="lab">en vedette</span>
-      <p>Trois pièces dessinées d'après une machine de teenage engineering : elles en reprennent les couleurs, le lettrage et le nom, et les portent à l'extérieur.</p>
+    <div class="vedettes" id="vedettes">
+      <div class="vedette-tete">
+        <span class="lab">en vedette</span>
+        <p>Trois pièces dessinées d'après une machine de teenage engineering : elles en reprennent les couleurs, le lettrage et le nom, et les portent à l'extérieur.</p>
+      </div>
+      <canvas class="vedettes-trio" id="vedettes-trio" aria-hidden="true"></canvas>
+      <div class="grille-hors" id="grille-hors"></div>
     </div>
-    <div class="grille-hors" id="grille-hors"></div>
     <div class="vedette-tete seconde"><span class="lab">les neuf basiques</span></div>
     <div class="grille" id="grille"></div>
+  </section>
+
+  <section class="facade" id="facade" aria-labelledby="titre-facade" data-sombre>
+    <div class="facade-tete">
+      <span class="lab">FW-13 · veste de terrain · hors gamme</span>
+      <h2 id="titre-facade">la façade<span class="pt">.</span></h2>
+      <p>Le marquage se lit comme le panneau d'une machine : un bloc de commande à gauche, un bloc d'identité à droite, le zip entre les deux. Tout le reste est laissé nu.</p>
+    </div>
+    <div class="facade-scene" id="facade-scene">
+      <ol class="reperes reperes-gauche">
+        <li class="repere" data-n="04" style="--y:29.5%;--n:4"><span class="lab">04 · épaulette</span><span>patte à pression sur une épaule rembourrée qui dépasse la carrure</span></li>
+        <li class="repere" data-n="02" style="--y:43.5%;--n:2"><span class="lab">02 · bloc de commande</span><span>trois barres et K.O MASTER, le lettrage de l'EP–133</span></li>
+        <li class="repere" data-n="06" style="--y:71.5%;--n:6"><span class="lab">06 · poignet</span><span>manche ample, resserrée d'un coup sur un élastique</span></li>
+      </ol>
+      <figure class="facade-veste" id="facade-veste">
+        <img src="img/detoure-FW-13-09.webp" alt="La veste de terrain FW-13 ouverte, orange, doublure noire" loading="lazy" decoding="async">
+        <img class="alt" src="img/detoure-FW-13-06.webp" alt="La veste de terrain FW-13 ouverte, encre, doublure orange" loading="lazy" decoding="async">
+        <span class="ancre" data-n="04" style="--x:33.5%;--y:29.5%"></span>
+        <span class="ancre" data-n="02" style="--x:41.5%;--y:43.5%"></span>
+        <span class="ancre" data-n="06" style="--x:19%;--y:71.5%"></span>
+        <span class="ancre" data-n="01" style="--x:51%;--y:31%"></span>
+        <span class="ancre" data-n="03" style="--x:59.5%;--y:41.5%"></span>
+        <span class="ancre" data-n="05" style="--x:58%;--y:60%"></span>
+        <div class="reticule" aria-hidden="true"><i class="rx"></i><i class="ry"></i><span class="releve lab"></span></div>
+      </figure>
+      <ol class="reperes reperes-droite">
+        <li class="repere" data-n="01" style="--y:31%;--n:1"><span class="lab">01 · col montant</span><span>il monte jusqu'au menton, l'étiquette 9 points cousue dedans</span></li>
+        <li class="repere" data-n="03" style="--y:41.5%;--n:3"><span class="lab">03 · bloc d'identité</span><span>la grille 3 × 3 et le numéro de la pièce</span></li>
+        <li class="repere" data-n="05" style="--y:60%;--n:5"><span class="lab">05 · doublure</span><span>matelassée, la parementure en contraste le long du zip</span></li>
+      </ol>
+    </div>
+    <div class="facade-pied">
+      <div class="facade-coloris" role="group" aria-label="Coloris de la veste">
+        <button type="button" aria-pressed="true" data-coloris="09"><i style="background:linear-gradient(135deg,#FF5000 0 66%,#1B1B1F 66%)"></i>09 · orange, doublure noire</button>
+        <button type="button" aria-pressed="false" data-coloris="06"><i style="background:linear-gradient(135deg,#1B1B1F 0 66%,#FF5000 66%)"></i>06 · encre, doublure orange</button>
+      </div>
+      <dl class="facade-specs">
+        <div><dt>matière</dt><dd>nylon technique mat</dd></div>
+        <div><dt>garnissage</dt><dd>matelassé léger</dd></div>
+        <div><dt>série</dt><dd>limitée</dd></div>
+        <div><dt>prix</dt><dd>149,90 €</dd></div>
+      </dl>
+      <a class="pilule" href="#FW-13">Voir la pièce</a>
+    </div>
   </section>
 
   <section class="lookbook" id="lookbook" aria-labelledby="titre-lookbook">
@@ -731,6 +857,7 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 <script type="module">
 const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const survol = matchMedia('(hover: hover)').matches;
+const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
 
 // catalogue
 // chaque coloris se lit en deux temps : la couleur de l'extérieur, puis celle de la doublure
@@ -821,6 +948,7 @@ const PIECES = {
   'FW-11': { nom: 'Polo rugby patchwork', prix: 59.9, hors: true, coloris: ['07'], tailles: VETEMENT, guide: 'haut',
     dapres: ['EP–133 K.O. II', 'https://teenage.engineering/products/ep-133'],
     portees: ['LOOK-11', 'LOOK-24', 'LOOK-23'],
+    modele: 'modeles/FW-11.glb',
     details: [['img/detail-FW-11.jpg', 'la couture']],
     texte: "Molleton de coton gratté, quatre panneaux orange et gris chiné, col polo en côte. Étiquette de poitrine K.O. Ⅱ, numéro de pièce brodé.",
     recit: ['La machine, portée', "L'EP–133 K.O. II est gris clair, avec des touches orange qui tombent là où il faut appuyer. Le polo reprend ce rapport exact : un fond gris, deux aplats orange, rien d'autre.", "Le nom de la pièce est brodé comme sur la façade de la machine, en petit, à sa place."],
@@ -829,6 +957,7 @@ const PIECES = {
   'FW-12': { nom: 'Rugby médiéval', prix: 69.9, hors: true, coloris: ['08'], tailles: VETEMENT, guide: 'haut',
     dapres: ['EP–1320 medieval', 'https://teenage.engineering/store/ep-1320'],
     portees: ['LOOK-12', 'LOOK-26', 'LOOK-25'],
+    modele: 'modeles/FW-12.glb',
     details: [['img/detail-FW-12.jpg', 'la broderie']],
     texte: "Toile de coton lavée, six panneaux vert, rouge, brun et noir, col chemise blanc. Lettrage gothique brodé rouge.",
     recit: ["L'autre bout du catalogue", "teenage engineering a sorti l'EP–1320 medieval, un sampler rempli de sons médiévaux. La pièce prend la blague au sérieux : les couleurs des enluminures, un lettrage gothique, et une coupe de maillot de rugby des années 1970.", "C'est la seule pièce du projet où le motif de 9 points n'apparaît pas au fil : il est estampé sur le bouton de col."],
@@ -837,7 +966,8 @@ const PIECES = {
   'FW-13': { nom: 'Veste de terrain', prix: 149.9, hors: true, coloris: ['09', '06'], tailles: VETEMENT, guide: 'haut',
     dapres: ['EP–133 K.O. II', 'https://teenage.engineering/products/ep-133'],
     portees: ['LOOK-13', 'LOOK-17', 'LOOK-15', 'LOOK-16'],
-    film: { src: '../videos/veste-rotation.mp4', affiche: 'img/affiche-veste.jpg' },
+    modele: 'modeles/FW-13.glb',
+    film: { src: '../videos/veste-rotation.mp4', affiche: 'img/affiche-veste.jpg', tour: .5 },
     texte: "Nylon technique mat, blouson à épaules larges, emmanchure basse, manche ample resserrée sur un poignet élastiqué, corps court sur ceinture élastiquée. Doublure noire à parementures orange, les 9 points imprimés à l'intérieur.",
     recit: ['La pièce la plus travaillée du projet', "C'est la seule vraie veste : nylon technique mat, doublure matelassée, col qui monte jusqu'au menton. Le volume est celui des blousons du milieu des années 1980, épaule large et rembourrée qui dépasse la carrure, emmanchure descendue, manche ample, corps court arrêté net sur la ceinture élastiquée.", "Son marquage se lit comme la façade d'une machine : un bloc de commande à gauche, un bloc d'identité à droite, séparés par le zip. Tout le reste est laissé nu, y compris le dos."],
     construction: [['Le nylon', "Nylon technique mat, déperlant, coutures thermocollées aux épaules."], ["L'épaule", "Épaule large et rembourrée qui dépasse la carrure, emmanchure descendue presque à la taille : le volume vient de la coupe, pas du garnissage."], ['La manche', "Manche ample montée en chauve-souris, resserrée d'un coup sur un poignet élastiqué."], ['La doublure', "Doublure noire, parementures orange le long du zip, les 9 points imprimés en orange sur la parementure gauche."]],
@@ -851,6 +981,7 @@ const pastille = (code, c) => {
 };
 const euros = (n) => n.toFixed(2).replace('.', ',') + ' €';
 const img = (code, c) => `img/${code}-${c}.jpg`;
+const detoure = (code, c) => `img/detoure-${code}-${c}.webp`;
 const portee = (nom) => `img/portees/${nom}.jpg`;
 const PAYSAGES = new Set(['LOOK-07', 'LOOK-18']);
 
@@ -864,8 +995,7 @@ for (const [code, p] of Object.entries(PIECES)) {
   carte.dataset.code = code;
   // au survol : la pièce portée si elle existe, sinon l'autre coloris
   const imageSurvol = p.portees ? portee(p.portees[0]) : img(code, p.coloris[p.coloris.length - 1]);
-  let media = `<img src="${img(code, p.coloris[0])}" alt="" loading="lazy"><img class="alt${p.portees ? ' porte' : ''}" src="${imageSurvol}" alt="" loading="lazy">`;
-  if (p.film) media += `<video src="${p.film.src}" muted loop playsinline preload="none"></video>`;
+  const media = `<img src="${img(code, p.coloris[0])}" alt="" loading="lazy"><img class="alt${p.portees ? ' porte' : ''}" src="${imageSurvol}" alt="" loading="lazy">`;
   carte.innerHTML = `
     <div class="carte-media">${media}</div>
     <div class="legende">
@@ -877,11 +1007,6 @@ for (const [code, p] of Object.entries(PIECES)) {
     </div>`;
   grille.appendChild(carte);
 
-  const video = carte.querySelector('video');
-  if (video && survol && !reduit) {
-    carte.addEventListener('pointerenter', () => { video.preload = 'auto'; video.play().catch(() => {}); });
-    carte.addEventListener('pointerleave', () => video.pause());
-  }
   carte.addEventListener('click', (e) => {
     if (e.target.closest('.plus')) {
       e.preventDefault();
@@ -905,9 +1030,8 @@ for (const [code, p] of Object.entries(PIECES)) {
   const second = p.coloris[1];
   carte.innerHTML = `
     <div class="carte-media">
-      <img src="${img(code, p.coloris[0])}" alt="" loading="lazy">
-      ${second ? `<img class="alt" src="${img(code, second)}" alt="" loading="lazy">` : ''}
-      ${p.film ? `<video src="${p.film.src}" muted loop playsinline preload="none"></video>` : ''}
+      <img src="${detoure(code, p.coloris[0])}" alt="" loading="lazy">
+      ${second ? `<img class="alt" src="${detoure(code, second)}" alt="" loading="lazy">` : ''}
     </div>
     <div class="legende">
       <span class="code">${code}</span>
@@ -918,11 +1042,6 @@ for (const [code, p] of Object.entries(PIECES)) {
     </div>
     <a class="dapres" href="${p.dapres[1]}" target="_blank" rel="noopener">d'après <b>${p.dapres[0]}</b> ↗</a>`;
   grilleHors.appendChild(carte);
-  const film = carte.querySelector('video');
-  if (film && survol && !reduit) {
-    carte.addEventListener('pointerenter', () => { film.preload = 'auto'; film.play().catch(() => {}); });
-    carte.addEventListener('pointerleave', () => film.pause());
-  }
   carte.addEventListener('click', (e) => {
     if (e.target.closest('.dapres')) return;
     e.preventDefault();
@@ -935,6 +1054,77 @@ for (const [code, p] of Object.entries(PIECES)) {
     ouvrirFiche(code, 'lookbook');
   });
 }
+
+// la section « en vedette » : au-dessus des cartes, les trois pièces en 3D, floutées, éclairées par une lampe
+// qui suit le curseur. Le module et les modèles ne sont téléchargés qu'à l'approche de la section, avec une souris
+// et les trois cartes côte à côte : sans curseur à suivre, la lampe n'a pas de rôle.
+const vedettes = document.getElementById('vedettes');
+const cartesVedettes = [...grilleHors.querySelectorAll('.hors-carte')];
+if (webgl && !reduit && survol && matchMedia('(min-width:1100px)').matches) new IntersectionObserver(([e], o) => {
+  if (!e.isIntersecting) return;
+  o.disconnect();
+  vedettes.classList.add('en-3d');
+  import('./js/vedettes3d.js').then(m => m.monterTrio({
+    zone: vedettes,
+    canvas: document.getElementById('vedettes-trio'),
+    urls: cartesVedettes.map(c => PIECES[c.dataset.code].modele),
+    cartes: cartesVedettes,
+  })).catch(() => vedettes.classList.remove('en-3d'));
+}, { rootMargin: '600px 0px' }).observe(vedettes);
+
+// la façade : chaque repère est relié à son point sur la veste par un trait. Survoler la veste
+// fait suivre la lumière et le réticule, et allume le repère le plus proche du curseur.
+const facade = document.getElementById('facade-scene');
+const veste = document.getElementById('facade-veste');
+const reperesFacade = [...facade.querySelectorAll('.repere')].map(r => {
+  const ancre = veste.querySelector(`.ancre[data-n="${r.dataset.n}"]`);
+  const trait = document.createElement('i');
+  trait.className = 'trait';
+  facade.appendChild(trait);
+  return { r, ancre, trait, gauche: !!r.closest('.reperes-gauche') };
+});
+const tracer = () => {
+  const s = facade.getBoundingClientRect();
+  for (const { r, ancre, trait, gauche } of reperesFacade) {
+    const a = ancre.getBoundingClientRect(), l = r.getBoundingClientRect();
+    const x = a.left + a.width / 2 - s.left, bord = (gauche ? l.right + 14 : l.left - 14) - s.left;
+    trait.style.cssText = `top:${a.top + a.height / 2 - s.top}px;left:${Math.min(x, bord)}px;width:${Math.abs(x - bord)}px`;
+  }
+};
+new ResizeObserver(tracer).observe(facade);
+const allumer = (n) => reperesFacade.forEach(({ r, ancre, trait }) => {
+  const oui = r.dataset.n === n;
+  r.classList.toggle('actif', oui); ancre.classList.toggle('actif', oui); trait.classList.toggle('actif', oui);
+});
+reperesFacade.forEach(({ r }) => {
+  r.addEventListener('pointerenter', () => allumer(r.dataset.n));
+  r.addEventListener('pointerleave', () => allumer(null));
+});
+if (survol) {
+  const releve = veste.querySelector('.releve');
+  // la photo couvre environ 1,74 m de large : la veste fait 1,5 m d'un poignet à l'autre
+  const LARGEUR_MM = 1740;
+  veste.addEventListener('pointermove', (e) => {
+    const b = veste.getBoundingClientRect(), s = facade.getBoundingClientRect();
+    const x = (e.clientX - b.left) / b.width, y = (e.clientY - b.top) / b.height;
+    veste.style.setProperty('--rx', `${x * 100}%`);
+    veste.style.setProperty('--ry', `${y * 100}%`);
+    facade.style.setProperty('--lx', `${(e.clientX - s.left) / s.width * 100}%`);
+    facade.style.setProperty('--ly', `${(e.clientY - s.top) / s.height * 100}%`);
+    releve.textContent = `x ${String(Math.round(x * LARGEUR_MM)).padStart(4, '0')} · y ${String(Math.round(y * LARGEUR_MM)).padStart(4, '0')} mm`;
+    let proche = null, mini = .07;
+    for (const { ancre } of reperesFacade) {
+      const d = Math.hypot(parseFloat(ancre.style.getPropertyValue('--x')) / 100 - x, parseFloat(ancre.style.getPropertyValue('--y')) / 100 - y);
+      if (d < mini) { mini = d; proche = ancre.dataset.n; }
+    }
+    allumer(proche);
+  });
+  veste.addEventListener('pointerleave', () => allumer(null));
+}
+document.querySelectorAll('.facade-coloris button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.facade-coloris button').forEach(o => o.setAttribute('aria-pressed', o === b));
+  veste.classList.toggle('encre', b.dataset.coloris === '06');
+}));
 
 // curseur : suit la souris sans retard, change d'état selon ce qu'il survole.
 // Au doigt ou au stylet, le curseur du système reste en place.
@@ -988,6 +1178,8 @@ const fermerPanneau = () => {
   if (!panneauOuvert) return;
   panneauOuvert.classList.remove('on'); voile.classList.remove('on');
   panneauOuvert.querySelectorAll('video').forEach(v => v.pause());
+  arreter3d?.();
+  arreter3d = null;
   document.documentElement.style.overflow = '';
   panneauOuvert = null;
   retourFocus?.focus?.();
@@ -1002,7 +1194,12 @@ const vuePrincipale = document.getElementById('vue-principale');
 const vignettes = document.getElementById('vignettes');
 let choix = { code: null, coloris: null, taille: null };
 
-const montrer = (element) => vuePrincipale.replaceChildren(element);
+let arreter3d = null;
+const montrer = (element) => {
+  arreter3d?.();
+  arreter3d = null;
+  vuePrincipale.replaceChildren(element);
+};
 const mediaImage = (src, alt) => {
   const i = document.createElement('img');
   i.src = src; i.alt = alt;
@@ -1028,7 +1225,21 @@ const ouvrirFiche = (code, depuis = 'lookbook') => {
       if (PAYSAGES.has(nom)) i.classList.add('paysage');
       return i;
     } })),
-    ...(p.film ? [{ libelle: 'porté, en mouvement', vignette: p.film.affiche, creer: () => {
+    ...(p.modele && webgl ? [{ libelle: 'en 3D', vignette: `img/vignette-3d-${code}.jpg`, creer: () => {
+      // la photo reste affichée le temps que le modèle arrive, puis le canvas la remplace
+      const cadre = document.createElement('div');
+      cadre.className = 'vue-3d-fiche';
+      cadre.append(mediaImage(img(code, p.coloris[0]), p.nom));
+      import('./js/vedettes3d.js')
+        .then(m => m.monterVue(cadre, p.modele, reduit))
+        .then(arreter => {
+          if (!cadre.isConnected) return arreter();
+          arreter3d = arreter;
+          cadre.classList.add('pret');
+        })
+        .catch(() => {});
+      return cadre;
+    } }] : p.film ? [{ libelle: 'porté, en mouvement', vignette: p.film.affiche, creer: () => {
       const v = document.createElement('video');
       Object.assign(v, { src: p.film.src, poster: p.film.affiche, muted: true, loop: true, playsInline: true, autoplay: !reduit });
       v.setAttribute('aria-label', `${p.nom}, porté en mouvement`);
@@ -1266,7 +1477,7 @@ const flou = document.getElementById('interieur');
 // le sweat fait un tour complet sur toute la scène : c'est le défilement qui le fait tourner.
 // La vidéo n'a que des images clés : chaque position se trouve sans décoder ce qui la précède.
 const tour = document.getElementById('flou-fond');
-let imageContinu = 0, cibleTour = 0, tempsTour = 0, imageTour = 0;
+let imageContinu = 0, cibleTour = 0, tempsTour = 0, imageTour = 0, baseTour = 0, regardTour = 0, sceneVisible = false;
 const tourner = () => {
   imageTour = 0;
   // un léger lissage : le sweat garde un peu d'élan quand le défilement s'arrête
@@ -1283,9 +1494,21 @@ const suivreContinu = () => {
   // de l'entrée de la scène en bas de l'écran jusqu'à sa sortie
   const course = continu.offsetHeight;
   const avance = Math.min(1, Math.max(0, (parcouru + innerHeight) / course));
-  cibleTour = avance * (tour.duration - .05);
+  sceneVisible = avance > 0 && avance < 1;
+  baseTour = avance * (tour.duration - .05);
+  viserTour();
+};
+// le curseur ajoute au plus un huitième de tour de part et d'autre de la position donnée par le défilement
+const viserTour = () => {
+  if (!tour.duration) return;
+  cibleTour = Math.min(tour.duration - .05, Math.max(0, baseTour + regardTour * tour.duration * .125));
   if (!imageTour) imageTour = requestAnimationFrame(tourner);
 };
+if (survol && !reduit) addEventListener('pointermove', (e) => {
+  if (!sceneVisible) return;
+  regardTour = (e.clientX / innerWidth) * 2 - 1;
+  viserTour();
+}, { passive: true });
 addEventListener('scroll', () => { cancelAnimationFrame(imageContinu); imageContinu = requestAnimationFrame(suivreContinu); }, { passive: true });
 tour.addEventListener('loadedmetadata', suivreContinu);
 // chargée en entier avant d'être pilotée : on peut se placer sur n'importe quelle image,
@@ -1296,6 +1519,31 @@ suivreContinu();
 const amorcer = () => tour.play().then(() => tour.pause()).then(suivreContinu).catch(() => {});
 addEventListener('pointerdown', amorcer, { once: true });
 addEventListener('touchstart', amorcer, { once: true, passive: true });
+
+// les labels mono se décodent à leur arrivée, comme l'écran d'une machine qui démarre
+if (!reduit) {
+  const SIGNES = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const decoder = (el) => {
+    const final = el.textContent;
+    const duree = Math.min(900, 280 + final.length * 24);
+    const debut = performance.now();
+    const pas = (t) => {
+      const k = Math.min(1, (t - debut) / duree);
+      const fixes = Math.floor(k * final.length);
+      el.textContent = [...final].map((c, i) =>
+        i < fixes || !/[\p{L}\p{N}]/u.test(c) ? c : SIGNES[Math.random() * SIGNES.length | 0]).join('');
+      if (k < 1) requestAnimationFrame(pas);
+    };
+    requestAnimationFrame(pas);
+  };
+  const aDecoder = new IntersectionObserver((entrees) => entrees.forEach(e => {
+    if (!e.isIntersecting) return;
+    aDecoder.unobserve(e.target);
+    decoder(e.target);
+  }), { threshold: .6 });
+  document.querySelectorAll('main .lab, .legende .code')
+    .forEach(el => { if (!el.children.length && el.textContent.trim()) aDecoder.observe(el); });
+}
 
 // la doublure suit le défilement
 const recit = document.getElementById('recit');
@@ -1436,6 +1684,16 @@ try {
 
 // la trame du bandeau, en direct (vidéo si WebGPU manque)
 const macro = document.getElementById('macro');
+// par-dessus, les deux pans du sweat ouvert, chargés à l'approche de la section
+const tissu = document.getElementById('tissu');
+if (webgl) {
+  document.getElementById('macro-indice').textContent = 'attrapez un pan du sweat';
+  new IntersectionObserver(([e], o) => {
+    if (!e.isIntersecting) return;
+    o.disconnect();
+    import('./js/tissu.js').then(m => m.monterTissu(tissu, { reserve: document.getElementById('macro-texte') })).catch(() => tissu.remove());
+  }, { rootMargin: '400px 0px' }).observe(macro);
+} else tissu.remove();
 try {
   const { monterTrame } = await effets;
   await monterTrame(document.getElementById('trame'), { reserve: document.getElementById('macro-texte') });
