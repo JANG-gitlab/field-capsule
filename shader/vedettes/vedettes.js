@@ -227,10 +227,14 @@ export const monterVue = async (conteneur, url, reduit) => {
 // derrière le récit, les trois vedettes prennent le relais du sweat et tournent du même mouvement que lui :
 // la page leur donne l'angle, elles ne tournent jamais seules
 export const monterDefile = async (canvas, urls) => {
-  const v = preparer(canvas, 1.45);
+  const v = preparer(canvas, 1);
+  // une seule échelle pour toutes : celle du sweat de la vidéo, qui remplit le cadre.
+  // Chaque pièce garde ainsi sa taille réelle par rapport aux autres
+  const ECHELLE = new Vector3(1.9, 1.9, 1);
   const pieces = await Promise.all(urls.map(async (url) => {
     const objet = await charger(url);
-    return { objet, taille: centrer(objet) };
+    centrer(objet);
+    return { objet, taille: ECHELLE };
   }));
   let courante = -1, angle = 0, image = 0;
   const peindre = () => {

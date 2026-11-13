@@ -105,7 +105,7 @@ a{color:inherit}
 /* pendant le récit, les trois vedettes en 3D prennent le relais du sweat, dans le même cadre et au même rythme */
 .defile{position:absolute;left:-3%;top:0;height:100%;width:min(100svh,64vw);opacity:0;pointer-events:none;
   transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%;will-change:filter,opacity;
-  -webkit-mask-image:linear-gradient(to right,#000 70%,transparent 98%);mask-image:linear-gradient(to right,#000 70%,transparent 98%)}
+  -webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%)}
 .flou{position:relative;min-height:170svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;gap:0 clamp(24px,4vw,64px);padding:30svh var(--marge) 34svh}
 .flou .bloc-lignes{grid-column:2;align-self:start}
 .flou .bloc-lignes + .bloc-lignes{align-self:end}
@@ -519,7 +519,7 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
   .continu-cadre video{left:0;width:100%;height:64svh;object-position:50% 30%;
     -webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);transform-origin:50% 0}
   .defile{left:0;width:100%;height:64svh;transform-origin:50% 0;
-    -webkit-mask-image:linear-gradient(to bottom,#000 75%,transparent 98%);mask-image:linear-gradient(to bottom,#000 75%,transparent 98%)}
+    -webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%)}
   .flou{grid-template-columns:1fr;min-height:150svh;padding:58svh var(--marge) 24svh;gap:14svh}
   .flou .bloc-lignes{grid-column:1}
   .flou .lab{left:var(--marge);bottom:16svh}
