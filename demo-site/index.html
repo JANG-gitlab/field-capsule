@@ -102,18 +102,10 @@ a{color:inherit}
   -webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);
   transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%;will-change:transform}
 .continu-voile{position:absolute;inset:0;background:var(--fond);opacity:calc(var(--q) * .18)}
-/* pendant le récit, les pièces se relèvent au scanner par-dessus la vidéo, dans le même cadre */
-.releve{position:absolute;left:-3%;top:0;height:100%;width:min(100svh,64vw);visibility:hidden;transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%}
-.releve.actif{visibility:visible}
-.releve canvas{width:100%;height:100%;-webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%)}
-.releve .lab{position:absolute;left:calc(3% + var(--marge));color:rgba(15,14,18,.62)}
-.releve-compte{top:96px}
-.releve-compte b,.releve-trait b{font-weight:500;color:var(--encre)}
-.releve-piece{bottom:56px}
-.releve-trait{top:calc(var(--trait, 0) * 100%);transform:translateY(60%);opacity:var(--vu, 0)}
-.releve-trait i{font-style:normal;color:var(--orange)}
-.releve::before{content:'';position:absolute;left:calc(3% + var(--marge) - 20px);top:96px;bottom:56px;width:7px;opacity:.5;
-  background:repeating-linear-gradient(to bottom,var(--label) 0 1px,transparent 1px 40px) 0 0 / 7px 100% no-repeat,repeating-linear-gradient(to bottom,var(--label) 0 1px,transparent 1px 8px) 0 0 / 3px 100% no-repeat}
+/* pendant le récit, les trois vedettes en 3D prennent le relais du sweat, dans le même cadre et au même rythme */
+.defile{position:absolute;left:-3%;top:0;height:100%;width:min(100svh,64vw);opacity:0;pointer-events:none;
+  transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%;will-change:filter,opacity;
+  -webkit-mask-image:linear-gradient(to right,#000 70%,transparent 98%);mask-image:linear-gradient(to right,#000 70%,transparent 98%)}
 .flou{position:relative;min-height:170svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;gap:0 clamp(24px,4vw,64px);padding:30svh var(--marge) 34svh}
 .flou .bloc-lignes{grid-column:2;align-self:start}
 .flou .bloc-lignes + .bloc-lignes{align-self:end}
@@ -526,11 +518,8 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 @media (max-aspect-ratio:1/1){
   .continu-cadre video{left:0;width:100%;height:64svh;object-position:50% 30%;
     -webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);transform-origin:50% 0}
-  .releve{left:0;width:100%;height:64svh;transform-origin:50% 0}
-  .releve canvas{-webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%)}
-  .releve-compte{top:72px}
-  .releve-piece{bottom:auto;top:96px}
-  .releve::before{display:none}
+  .defile{left:0;width:100%;height:64svh;transform-origin:50% 0;
+    -webkit-mask-image:linear-gradient(to bottom,#000 75%,transparent 98%);mask-image:linear-gradient(to bottom,#000 75%,transparent 98%)}
   .flou{grid-template-columns:1fr;min-height:150svh;padding:58svh var(--marge) 24svh;gap:14svh}
   .flou .bloc-lignes{grid-column:1}
   .flou .lab{left:var(--marge);bottom:16svh}
@@ -599,12 +588,7 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
     <div class="continu-fond" aria-hidden="true">
       <div class="continu-cadre">
         <video id="flou-fond" muted playsinline preload="none" poster="img/affiche-fantome-flou.jpg" data-src="../videos/sweat-fantome-flou.mp4"></video>
-        <div class="releve" id="releve" aria-hidden="true">
-          <canvas></canvas>
-          <span class="lab releve-compte">relevé <b>01</b> / 04</span>
-          <span class="lab releve-trait"><i>●</i> lecture <b>000</b> mm</span>
-          <span class="lab releve-piece">FW-03 · sweat zippé à capuche · 39,90 €</span>
-        </div>
+        <canvas class="defile" id="defile" aria-hidden="true"></canvas>
         <div class="continu-voile"></div>
       </div>
     </div>
@@ -619,28 +603,28 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
     <div class="recit-fixe">
       <div class="recit-numero" aria-hidden="true"><span><i>01</i><i>02</i><i>03</i><i>04</i></span></div>
       <div class="etapes">
-        <div class="etape" data-piece="FW-03" data-coloris="01">
+        <div class="etape">
           <span class="lab">01 · le terrain</span>
           <h2>pour ceux qui <em>fabriquent</em></h2>
           <p>teenage engineering dessine des machines pour les gens qui font des images et du son. UNIQLO habille ces mêmes gens douze heures par jour, du studio au train. field. étend au vêtement la gamme de terrain du studio.</p>
           <a class="voir mono" href="#FW-03">voir le FW-03</a>
         </div>
-        <div class="etape" data-piece="FW-01" data-coloris="01">
+        <div class="etape">
           <span class="lab">02 · le constat</span>
           <h2>deux marques qui <em>enterrent</em> leurs specs</h2>
-          <p>L'une imprime ses cotes au dos de la boîte, l'autre range la composition dans un accordéon que personne n'ouvre. Chez les deux, le travail le plus soigné finit à l'intérieur.</p>
-          <a class="voir mono" href="#FW-01">voir le FW-01</a>
+          <p>L'une imprime ses cotes au dos de la boîte, l'autre range la composition dans un accordéon que personne n'ouvre. field. fait l'inverse, jusqu'au polo FW-11 qui porte dehors les couleurs et le nom de l'EP–133 K.O. II.</p>
+          <a class="voir mono" href="#FW-11">voir le FW-11</a>
         </div>
-        <div class="etape" data-piece="FW-06" data-coloris="02">
-          <span class="lab">03 · la doublure</span>
-          <h2>un motif, <em>neuf pièces</em></h2>
-          <p>Une grille de points blancs sur fond bleu double l'intérieur de toute la collection. Elle sort au premier geste : un panneau qu'on ouvre, un poignet qu'on retourne, une capuche qu'on rabat.</p>
-          <a class="voir mono" href="#FW-06">voir le FW-06</a>
+        <div class="etape">
+          <span class="lab">03 · le clin d'œil</span>
+          <h2>même la blague, <em>au sérieux</em></h2>
+          <p>teenage engineering a sorti un sampler rempli de sons médiévaux, l'EP–1320 medieval. Le FW-12 le prend au mot : couleurs d'enluminure, lettrage gothique, coupe de maillot de rugby.</p>
+          <a class="voir mono" href="#FW-12">voir le FW-12</a>
         </div>
-        <div class="etape" data-piece="FW-13" data-coloris="09">
-          <span class="lab">04 · les machines</span>
+        <div class="etape">
+          <span class="lab">04 · la façade</span>
           <h2>ce qui est caché, <em>montré</em></h2>
-          <p>Trois pièces hors gamme vont jusqu'au bout : les couleurs, le lettrage et le nom d'une machine du studio, portés dehors. Le site suit la même règle : chaque fiche montre tout, sans accordéon.</p>
+          <p>La veste FW-13 se lit comme la façade d'une machine : un bloc de commande, un bloc d'identité, le zip entre les deux. Dedans, comme dans les neuf basiques, la doublure à points.</p>
           <a class="voir mono" href="#FW-13">voir le FW-13</a>
         </div>
       </div>
@@ -1536,6 +1520,7 @@ const tourner = () => {
   // un léger lissage : le sweat garde un peu d'élan quand le défilement s'arrête
   tempsTour += (cibleTour - tempsTour) * (reduit ? 1 : .18);
   if (!tour.seeking && Math.abs(tour.currentTime - tempsTour) > 1 / 60) tour.currentTime = tempsTour;
+  tournerDefile();
   if (Math.abs(cibleTour - tempsTour) > .002) imageTour = requestAnimationFrame(tourner);
 };
 const suivreContinu = () => {
@@ -1614,46 +1599,45 @@ etapes.forEach(e => {
   h2.setAttribute('aria-label', h2.textContent);
   h2.innerHTML = decouper(h2);
 });
-// les pièces du récit, relevées au scanner derrière le texte
-const releve = document.getElementById('releve');
-const PIECES_RELEVE = etapes.map(e => e.dataset.piece);
-const compteReleve = releve.querySelector('.releve-compte b');
-const traitReleve = releve.querySelector('.releve-trait');
-const mesureReleve = traitReleve.querySelector('b');
-const pieceReleve = releve.querySelector('.releve-piece');
-let scanner = null, positionReleve = -1, pieceAffichee = '';
-const placerReleve = (f) => {
-  positionReleve = f;
-  if (!scanner) return;
-  scanner.placer(f);
-  releve.classList.toggle('actif', f > -1);
-  // le relevé repart de l'image courante de la vidéo : on peut la cacher dessous sans que rien ne saute
-  tour.style.visibility = f > -1 ? 'hidden' : '';
-  const k = f - Math.floor(f);
-  releve.style.setProperty('--trait', (k * 1.32 - .01).toFixed(4));
-  releve.style.setProperty('--vu', k > 0 && k < 1 ? Math.min(1, Math.sin(k * Math.PI) * 3).toFixed(3) : 0);
-  // la cote lue sous le trait, sur un vêtement de 680 mm
-  mesureReleve.textContent = String(Math.round(Math.min(1, k * 1.32) * 680)).padStart(3, '0');
-  const i = Math.max(0, Math.min(PIECES_RELEVE.length - 1, Math.round(f)));
-  compteReleve.textContent = String(i + 1).padStart(2, '0');
-  const code = PIECES_RELEVE[i];
-  if (code !== pieceAffichee) {
-    pieceAffichee = code;
-    pieceReleve.textContent = `${code} · ${PIECES[code].nom.toLowerCase()} · ${euros(PIECES[code].prix)}`;
-  }
+// derrière les étapes 2 à 4, les vedettes en 3D prennent le relais du sweat ; on change de pièce au plus fort du flou
+const defile = document.getElementById('defile');
+const VEDETTES_DEFILE = ['FW-11', 'FW-12', 'FW-13'];
+let tribune = null, positionDefile = 0;
+const placerDefile = (f) => {
+  positionDefile = f;
+  if (!tribune) return;
+  const i = Math.round(f);
+  const ecart = Math.abs(f - i) * 2;
+  // entre deux pièces le flou monte, puis retombe sur la suivante
+  defile.style.filter = ecart > .01 ? `blur(${(ecart * ecart * 22).toFixed(1)}px)` : '';
+  // la première arrivée se fond dans la vidéo, déjà floue
+  const v = Math.min(1, Math.max(0, (f - .25) / .3));
+  defile.style.opacity = v;
+  tour.style.opacity = 1 - v;
+  if (i > 0) tribune.montrer(i - 1);
+  tournerDefile();
+};
+// même angle que la vidéo, qui fait un tour vers la gauche sur toute la scène ;
+// chaque pièce passe de trois quarts au milieu de son étape
+const angleTour = (temps) => -temps / tour.duration * Math.PI * 2;
+const tempsCentre = (i) => {
+  const y = recit.offsetTop + (i + .5) / etapes.length * (recit.offsetHeight - innerHeight);
+  const avance = (y + innerHeight) / continu.offsetHeight;
+  return Math.min(1, Math.max(0, avance)) * (tour.duration - .05);
+};
+const tournerDefile = () => {
+  if (!tribune || !tour.duration) return;
+  const i = Math.max(1, Math.round(positionDefile));
+  tribune.tourner(angleTour(tempsTour) - angleTour(tempsCentre(i)) - .35);
 };
 if (webgl) new IntersectionObserver(([e], o) => {
   if (!e.isIntersecting) return;
   o.disconnect();
-  import('./js/releve.js')
-    .then(m => m.monterReleve(releve.querySelector('canvas'), tour, etapes.map(e => img(e.dataset.piece, e.dataset.coloris)), { reduit }))
-    .then(s => {
-      scanner = s;
-      placerReleve(positionReleve);
-      if (survol && !reduit) addEventListener('pointermove', (e) => scanner.regarder(e.clientX / innerWidth * 2 - 1, e.clientY / innerHeight * 2 - 1), { passive: true });
-    })
-    .catch(() => releve.remove());
-}, { rootMargin: '600px 0px' }).observe(recit);
+  import('./js/vedettes3d.js')
+    .then(m => m.monterDefile(defile, VEDETTES_DEFILE.map(c => PIECES[c].modele)))
+    .then(t => { tribune = t; placerDefile(positionDefile); })
+    .catch(() => defile.remove());
+}, { rootMargin: '800px 0px' }).observe(recit);
 
 let imageRecit = 0;
 const suivreRecit = () => {
@@ -1672,12 +1656,12 @@ const suivreRecit = () => {
     e.classList.toggle('active', i === courant);
   });
   numero.style.setProperty('--n', courant);
-  // -1 : la vidéo ; puis une pièce par étape. Chaque passage est centré sur la frontière entre deux étapes
+  // 0 : le sweat de la vidéo ; puis une vedette par étape. Chaque passage est centré sur la frontière entre deux étapes
   const u = -r.top / (recit.offsetHeight - innerHeight) * n;
   const passage = (c) => { const x = Math.min(1, Math.max(0, (u - c) / .7 + .5)); return x * x * (3 - 2 * x); };
-  let f = -1 + passage(-.6);
+  let f = 0;
   for (let i = 1; i < n; i++) f += passage(i);
-  placerReleve(f);
+  placerDefile(f);
   reperes.forEach((b, i) => b.classList.toggle('passe', p >= i / (reperes.length - 1) - .001));
 };
 addEventListener('scroll', () => { cancelAnimationFrame(imageRecit); imageRecit = requestAnimationFrame(suivreRecit); }, { passive: true });

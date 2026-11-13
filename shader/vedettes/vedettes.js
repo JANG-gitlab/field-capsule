@@ -223,3 +223,30 @@ export const monterVue = async (conteneur, url, reduit) => {
     v.rendu.forceContextLoss();
   };
 };
+
+// derrière le récit, les trois vedettes prennent le relais du sweat et tournent du même mouvement que lui :
+// la page leur donne l'angle, elles ne tournent jamais seules
+export const monterDefile = async (canvas, urls) => {
+  const v = preparer(canvas, 1.45);
+  const pieces = await Promise.all(urls.map(async (url) => {
+    const objet = await charger(url);
+    return { objet, taille: centrer(objet) };
+  }));
+  let courante = -1, angle = 0, image = 0;
+  const peindre = () => {
+    image = 0;
+    v.pivot.rotation.y = angle;
+    v.rendu.render(v.scene, v.camera);
+  };
+  const relancer = () => { if (!image) image = requestAnimationFrame(peindre); };
+  new ResizeObserver(() => { v.ajuster(); relancer(); }).observe(canvas);
+  return {
+    montrer(i) {
+      if (i === courante) return;
+      courante = i;
+      v.montrer(pieces[i].objet, pieces[i].taille);
+      relancer();
+    },
+    tourner(a) { angle = a; relancer(); },
+  };
+};

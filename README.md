@@ -44,7 +44,7 @@ Le détail section par section est dans [`demo-site/LISEZMOI.md`](demo-site/LISE
 
 **Deux accents, une règle.** Le bleu `#0071BB` appartient à la doublure et aux données, l'orange `#FF5000` appartient à l'action. Les deux valeurs sont relevées sur le CSS de teenage engineering.
 
-**Les pièces vedettes existent en 3D.** Au-dessus de leurs cartes, les trois modèles floutés sont éclairés par une lampe qui suit le curseur. Dans la fiche, on les fait tourner à la main. Le module et les modèles ne sont téléchargés qu'à l'approche de la section, et jamais sur téléphone.
+**Les pièces vedettes existent en 3D.** Au-dessus de leurs cartes, les trois modèles floutés sont éclairés par une lampe qui suit le curseur. Dans la fiche, on les fait tourner à la main. Le module et les modèles ne sont téléchargés qu’à l’approche de la section. Derrière le récit, les trois pièces prennent le relais du sweat et tournent du même mouvement que lui, piloté par la même horloge que la vidéo.
 
 **La trame se touche.** Les deux pans d'un sweat ouvert encadrent la doublure. Ce sont de vraies plaques de tissu épais simulées en Verlet, qui ne s'étirent pas et ne se traversent pas : on en attrape un, il se plie, montre son envers et retombe. Rendu en WebGL2 sans bibliothèque, 4 Ko compressé, et le calcul s'arrête dès que le tissu est immobile.
 
