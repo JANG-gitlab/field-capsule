@@ -102,6 +102,18 @@ a{color:inherit}
   -webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);
   transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%;will-change:transform}
 .continu-voile{position:absolute;inset:0;background:var(--fond);opacity:calc(var(--q) * .18)}
+/* pendant le récit, les pièces se relèvent au scanner par-dessus la vidéo, dans le même cadre */
+.releve{position:absolute;left:-3%;top:0;height:100%;width:min(100svh,64vw);visibility:hidden;transform:scale(calc(1.02 - var(--q) * .03));transform-origin:0 50%}
+.releve.actif{visibility:visible}
+.releve canvas{width:100%;height:100%;-webkit-mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%);mask-image:linear-gradient(to right,#000 40%,rgba(0,0,0,.5) 68%,transparent 96%)}
+.releve .lab{position:absolute;left:calc(3% + var(--marge));color:rgba(15,14,18,.62)}
+.releve-compte{top:96px}
+.releve-compte b,.releve-trait b{font-weight:500;color:var(--encre)}
+.releve-piece{bottom:56px}
+.releve-trait{top:calc(var(--trait, 0) * 100%);transform:translateY(60%);opacity:var(--vu, 0)}
+.releve-trait i{font-style:normal;color:var(--orange)}
+.releve::before{content:'';position:absolute;left:calc(3% + var(--marge) - 20px);top:96px;bottom:56px;width:7px;opacity:.5;
+  background:repeating-linear-gradient(to bottom,var(--label) 0 1px,transparent 1px 40px) 0 0 / 7px 100% no-repeat,repeating-linear-gradient(to bottom,var(--label) 0 1px,transparent 1px 8px) 0 0 / 3px 100% no-repeat}
 .flou{position:relative;min-height:170svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;gap:0 clamp(24px,4vw,64px);padding:30svh var(--marge) 34svh}
 .flou .bloc-lignes{grid-column:2;align-self:start}
 .flou .bloc-lignes + .bloc-lignes{align-self:end}
@@ -113,7 +125,7 @@ a{color:inherit}
 .flou .lab{position:absolute;left:calc(50% + clamp(12px,2vw,32px));bottom:26svh;color:rgba(15,14,18,.55)}
 
 /* récit au scroll : tout est piloté par --p (0 → 1) et, par étape, --d (-1 → 0 → 1) */
-.recit{height:230vh;position:relative;--p:0}
+.recit{height:300vh;position:relative;--p:0}
 .recit-fixe{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(24px,4vw,64px);padding:84px var(--marge) 40px}
 .recit-numero{position:absolute;right:calc(var(--marge) - .06em);bottom:-.18em;font-family:var(--mono);font-size:clamp(160px,26vw,420px);line-height:1;letter-spacing:-.06em;
   color:transparent;-webkit-text-stroke:1px var(--ligne);pointer-events:none;display:flex;overflow:hidden;height:1em}
@@ -128,6 +140,8 @@ a{color:inherit}
 .etape h2 .mot span{display:inline-block;transform:translateY(calc(var(--d) * (-115% - var(--j) * 38%))) rotate(calc(var(--d) * -6deg));will-change:transform}
 .etape h2 em{font-style:normal;color:var(--accent)}
 .etape p{font-size:16px;line-height:1.55;color:#4A4A4E;max-width:420px;opacity:calc(1 - abs(var(--d)) * 2.6);transform:translateY(calc(var(--d) * -30px))}
+.etape .voir{display:inline-block;margin-top:18px;color:var(--encre);text-decoration:none;box-shadow:inset 0 -1px 0 currentColor;opacity:calc(1 - abs(var(--d)) * 2.6)}
+.etape .voir:hover{color:var(--accent)}
 .jauge{position:absolute;left:var(--marge);right:var(--marge);bottom:28px;height:2px;background:var(--ligne)}
 .jauge i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(var(--p));background:var(--accent)}
 .jauge b{position:absolute;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--fond);box-shadow:inset 0 0 0 2px var(--accent);transform:translateX(-50%);transition:background .3s var(--meca)}
@@ -417,6 +431,7 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 .fiche.on,.panier.on{transform:none}
 .tete-panneau{display:flex;justify-content:space-between;align-items:center;height:54px;padding:0 24px;border-bottom:1px solid var(--ligne);flex:none}
 .fermer{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.tete-panneau .actions{display:flex;gap:22px}
 .fiche-corps{flex:1;overflow:auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
 /* la galerie reste en place, seule la colonne de droite défile */
 .galerie{position:sticky;top:0;display:flex;flex-direction:column;gap:var(--gout);padding:var(--gout);height:calc(100svh - 54px)}
@@ -511,6 +526,11 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 @media (max-aspect-ratio:1/1){
   .continu-cadre video{left:0;width:100%;height:64svh;object-position:50% 30%;
     -webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);transform-origin:50% 0}
+  .releve{left:0;width:100%;height:64svh;transform-origin:50% 0}
+  .releve canvas{-webkit-mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%);mask-image:linear-gradient(to bottom,#000 45%,rgba(0,0,0,.5) 72%,transparent 98%)}
+  .releve-compte{top:72px}
+  .releve-piece{bottom:auto;top:96px}
+  .releve::before{display:none}
   .flou{grid-template-columns:1fr;min-height:150svh;padding:58svh var(--marge) 24svh;gap:14svh}
   .flou .bloc-lignes{grid-column:1}
   .flou .lab{left:var(--marge);bottom:16svh}
@@ -579,6 +599,12 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
     <div class="continu-fond" aria-hidden="true">
       <div class="continu-cadre">
         <video id="flou-fond" muted playsinline preload="none" poster="img/affiche-fantome-flou.jpg" data-src="../videos/sweat-fantome-flou.mp4"></video>
+        <div class="releve" id="releve" aria-hidden="true">
+          <canvas></canvas>
+          <span class="lab releve-compte">relevé <b>01</b> / 04</span>
+          <span class="lab releve-trait"><i>●</i> lecture <b>000</b> mm</span>
+          <span class="lab releve-piece">FW-03 · sweat zippé à capuche · 39,90 €</span>
+        </div>
         <div class="continu-voile"></div>
       </div>
     </div>
@@ -591,25 +617,34 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 
   <section class="recit" id="recit" aria-label="La doublure">
     <div class="recit-fixe">
-      <div class="recit-numero" aria-hidden="true"><span><i>01</i><i>02</i><i>03</i></span></div>
+      <div class="recit-numero" aria-hidden="true"><span><i>01</i><i>02</i><i>03</i><i>04</i></span></div>
       <div class="etapes">
-        <div class="etape">
-          <span class="lab">01 · fermé</span>
-          <h2>un basique, rien de plus</h2>
-          <p>Molleton gris chiné, coupe boxy, aucun cordon. De l'extérieur, un sweat que tout le monde porte.</p>
+        <div class="etape" data-piece="FW-03" data-coloris="01">
+          <span class="lab">01 · le terrain</span>
+          <h2>pour ceux qui <em>fabriquent</em></h2>
+          <p>teenage engineering dessine des machines pour les gens qui font des images et du son. UNIQLO habille ces mêmes gens douze heures par jour, du studio au train. field. étend au vêtement la gamme de terrain du studio.</p>
+          <a class="voir mono" href="#FW-03">voir le FW-03</a>
         </div>
-        <div class="etape">
-          <span class="lab">02 · on l'ouvre</span>
-          <h2>la trame <em>apparaît</em></h2>
-          <p>À l'intérieur, une doublure bleue imprimée d'une grille régulière de points blancs. Le même motif sur les neuf pièces, en orange sur l'édition orange.</p>
+        <div class="etape" data-piece="FW-01" data-coloris="01">
+          <span class="lab">02 · le constat</span>
+          <h2>deux marques qui <em>enterrent</em> leurs specs</h2>
+          <p>L'une imprime ses cotes au dos de la boîte, l'autre range la composition dans un accordéon que personne n'ouvre. Chez les deux, le travail le plus soigné finit à l'intérieur.</p>
+          <a class="voir mono" href="#FW-01">voir le FW-01</a>
         </div>
-        <div class="etape">
-          <span class="lab">03 · ouvert</span>
+        <div class="etape" data-piece="FW-06" data-coloris="02">
+          <span class="lab">03 · la doublure</span>
+          <h2>un motif, <em>neuf pièces</em></h2>
+          <p>Une grille de points blancs sur fond bleu double l'intérieur de toute la collection. Elle sort au premier geste : un panneau qu'on ouvre, un poignet qu'on retourne, une capuche qu'on rabat.</p>
+          <a class="voir mono" href="#FW-06">voir le FW-06</a>
+        </div>
+        <div class="etape" data-piece="FW-13" data-coloris="09">
+          <span class="lab">04 · les machines</span>
           <h2>ce qui est caché, <em>montré</em></h2>
-          <p>UNIQLO enfouit la composition dans un accordéon, Teenage Engineering noie ses cotes dans une page. field. sort au jour ce qui est à l'intérieur.</p>
+          <p>Trois pièces hors gamme vont jusqu'au bout : les couleurs, le lettrage et le nom d'une machine du studio, portés dehors. Le site suit la même règle : chaque fiche montre tout, sans accordéon.</p>
+          <a class="voir mono" href="#FW-13">voir le FW-13</a>
         </div>
       </div>
-      <div class="jauge" aria-hidden="true"><i></i><b style="left:0"></b><b style="left:50%"></b><b style="left:100%"></b></div>
+      <div class="jauge" aria-hidden="true"><i></i><b style="left:0"></b><b style="left:33.333%"></b><b style="left:66.667%"></b><b style="left:100%"></b></div>
     </div>
   </section>
   </div>
@@ -795,7 +830,7 @@ html.curseur-actif,html.curseur-actif *{cursor:none!important}
 <div class="voile" id="voile"></div>
 
 <aside class="fiche" id="fiche" role="dialog" aria-modal="true" aria-labelledby="fiche-titre" tabindex="-1">
-  <div class="tete-panneau"><span class="lab" id="fiche-code"></span><button class="fermer" data-fermer>fermer ✕</button></div>
+  <div class="tete-panneau"><span class="lab" id="fiche-code"></span><span class="actions"><button class="fermer" id="fiche-partager">partager ↗</button><button class="fermer" data-fermer>fermer ✕</button></span></div>
   <div class="fiche-corps">
     <div class="galerie">
       <div class="vue-principale" id="vue-principale"></div>
@@ -1186,6 +1221,24 @@ const fermerPanneau = () => {
 };
 voile.addEventListener('click', fermerPanneau);
 document.querySelectorAll('[data-fermer]').forEach(b => b.addEventListener('click', fermerPanneau));
+
+// chaque pièce a sa page à partager : elle porte l'aperçu (titre, photo) et renvoie sur la fiche
+const partager = document.getElementById('fiche-partager');
+partager.addEventListener('click', async () => {
+  const { code } = choix;
+  const url = new URL(`produit/${code.toLowerCase()}/`, location.href.split('#')[0]).href;
+  if (navigator.share) {
+    navigator.share({ title: `${code} · ${PIECES[code].nom} · field.`, url }).catch(() => {});
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    partager.textContent = 'lien copié ✓';
+  } catch {
+    prompt('Lien de la pièce', url);
+  }
+  setTimeout(() => { partager.textContent = 'partager ↗'; }, 1800);
+});
 addEventListener('keydown', (e) => { if (e.key === 'Escape') fermerPanneau(); });
 
 // fiche produit
@@ -1561,6 +1614,47 @@ etapes.forEach(e => {
   h2.setAttribute('aria-label', h2.textContent);
   h2.innerHTML = decouper(h2);
 });
+// les pièces du récit, relevées au scanner derrière le texte
+const releve = document.getElementById('releve');
+const PIECES_RELEVE = etapes.map(e => e.dataset.piece);
+const compteReleve = releve.querySelector('.releve-compte b');
+const traitReleve = releve.querySelector('.releve-trait');
+const mesureReleve = traitReleve.querySelector('b');
+const pieceReleve = releve.querySelector('.releve-piece');
+let scanner = null, positionReleve = -1, pieceAffichee = '';
+const placerReleve = (f) => {
+  positionReleve = f;
+  if (!scanner) return;
+  scanner.placer(f);
+  releve.classList.toggle('actif', f > -1);
+  // le relevé repart de l'image courante de la vidéo : on peut la cacher dessous sans que rien ne saute
+  tour.style.visibility = f > -1 ? 'hidden' : '';
+  const k = f - Math.floor(f);
+  releve.style.setProperty('--trait', (k * 1.32 - .01).toFixed(4));
+  releve.style.setProperty('--vu', k > 0 && k < 1 ? Math.min(1, Math.sin(k * Math.PI) * 3).toFixed(3) : 0);
+  // la cote lue sous le trait, sur un vêtement de 680 mm
+  mesureReleve.textContent = String(Math.round(Math.min(1, k * 1.32) * 680)).padStart(3, '0');
+  const i = Math.max(0, Math.min(PIECES_RELEVE.length - 1, Math.round(f)));
+  compteReleve.textContent = String(i + 1).padStart(2, '0');
+  const code = PIECES_RELEVE[i];
+  if (code !== pieceAffichee) {
+    pieceAffichee = code;
+    pieceReleve.textContent = `${code} · ${PIECES[code].nom.toLowerCase()} · ${euros(PIECES[code].prix)}`;
+  }
+};
+if (webgl) new IntersectionObserver(([e], o) => {
+  if (!e.isIntersecting) return;
+  o.disconnect();
+  import('./js/releve.js')
+    .then(m => m.monterReleve(releve.querySelector('canvas'), tour, etapes.map(e => img(e.dataset.piece, e.dataset.coloris)), { reduit }))
+    .then(s => {
+      scanner = s;
+      placerReleve(positionReleve);
+      if (survol && !reduit) addEventListener('pointermove', (e) => scanner.regarder(e.clientX / innerWidth * 2 - 1, e.clientY / innerHeight * 2 - 1), { passive: true });
+    })
+    .catch(() => releve.remove());
+}, { rootMargin: '600px 0px' }).observe(recit);
+
 let imageRecit = 0;
 const suivreRecit = () => {
   const r = recit.getBoundingClientRect();
@@ -1578,6 +1672,12 @@ const suivreRecit = () => {
     e.classList.toggle('active', i === courant);
   });
   numero.style.setProperty('--n', courant);
+  // -1 : la vidéo ; puis une pièce par étape. Chaque passage est centré sur la frontière entre deux étapes
+  const u = -r.top / (recit.offsetHeight - innerHeight) * n;
+  const passage = (c) => { const x = Math.min(1, Math.max(0, (u - c) / .7 + .5)); return x * x * (3 - 2 * x); };
+  let f = -1 + passage(-.6);
+  for (let i = 1; i < n; i++) f += passage(i);
+  placerReleve(f);
   reperes.forEach((b, i) => b.classList.toggle('passe', p >= i / (reperes.length - 1) - .001));
 };
 addEventListener('scroll', () => { cancelAnimationFrame(imageRecit); imageRecit = requestAnimationFrame(suivreRecit); }, { passive: true });
